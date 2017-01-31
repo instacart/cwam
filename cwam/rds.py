@@ -6,10 +6,15 @@ class RDSInstance:
         self.client = client
         self.arn = info.get('DBInstanceArn')
         self.name = info.get('DBInstanceIdentifier')
-        self.domain = None
 
     def __str__(self):
         return '(RDSInstance) Name: %s' % self.name
+
+    def default_dimension_name(self):
+        return 'DBInstanceIdentifier'
+
+    def default_dimension_value(self):
+        return self.name
 
     def dict(self):
         return {'DBInstanceArn': self.arn,

@@ -56,10 +56,6 @@ rds:
     team3: arn:aws:sns:us-east-1:143926955520:team3
   default:
     all:
-      Dimensions:
-        -
-         Name: DBInstanceIdentifier
-         Value: DBInstanceIdentifier
       AlarmActions:
         - team1
         - team2

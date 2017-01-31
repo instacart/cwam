@@ -9,6 +9,7 @@ import click
 
 from .default_alarm import DefaultAlarm
 from .alarm import Alarm
+from .alb import ALB
 from .elb import ELB
 from .rds import RDS
 from .utils import json_serializer
@@ -25,6 +26,9 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 CONF_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                  '.cwam',
                                  'conf.yml')
+ALB_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
+                                    '.cwam',
+                                    'alb.template.yml')
 ELB_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                     '.cwam',
                                     'elb.template.yml')
@@ -155,6 +159,117 @@ AWS Region not found in configuration file: {0}.""".format(conf))
         ctx.obj['AWS_DEFAULT_REGION'] = aws_default_region
     else:
         ctx.obj['AWS_DEFAULT_REGION'] = None
+
+@main.group()
+@click.pass_context
+def alb(ctx):
+    pass
+
+
+@alb.command(name='list')  # noqa: F811
+@click.pass_context
+def alb_list(ctx):
+    """List ALB."""
+    instances = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                    aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                    debug=ctx.obj['DEBUG']).list()
+    for instance in instances:
+        click.echo(instance)
+
+
+@alb.command(name='create')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ALB_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+@click.option('--simulate', '-s', is_flag=True, default=False,
+              help='Simulate only. Do not take actions')
+def alb_create(ctx, template, simulate):
+    """Create alarms configured in --template file"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['alb']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+        only = template.get('only')
+        exclude = template.get('exclude')
+        sns = template.get('sns')
+        default = template.get('default')
+        alarms = template.get('alarms')
+    else:
+        ctx.fail('Conf file not found. Make sure --template is a valid path.')
+
+    if len(alarms) > 0:
+        alb = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                  aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                  debug=ctx.obj['DEBUG'])
+        alb.create(objects=parse_alarms(namespace, alarms),
+                   namespace=namespace,
+                   prefix=prefix,
+                   default=parse_default_alarm(namespace, default),
+                   only=parse_exclude_only(only),
+                   exclude=parse_exclude_only(exclude),
+                   sns=sns,
+                   simulate=simulate)
+    else:
+        click.echo('No alarms found.')
+
+
+@alb.command(name='local-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ALB_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+def alb_local_alarms(ctx, template):
+    namespace, alarms = parse_alarms_yml(ctx, 'alb', template)
+    for k, v in parse_alarms(namespace, alarms).iteritems():
+        click.echo(k)
+        for alarm in v:
+            click.echo(str(alarm))
+
+
+@alb.command(name='remote-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ALB_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+@click.option('--no-human', '-h', is_flag=True, default=False,
+              help='Show only human alarms.')
+@click.option('--no-script', '-s', is_flag=True, default=False,
+              help='Show only script alarms.')
+def alb_remote_alarms(ctx, template, no_human, no_script):
+    """List alarms configured on AWS"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['alb']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+    else:
+        namespace = None
+        prefix = None
+
+    alb = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+              debug=ctx.obj['DEBUG'])
+    human_alarms, script_alarms = alb.remote_alarms(namespace=namespace,
+                                                    prefix=prefix)
+
+    if not no_human:
+        click.echo('Human alarms.')
+        if len(human_alarms) > 0:
+            for alarm in human_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+    if not no_script:
+        click.echo('Script alarms.')
+        if len(script_alarms) > 0:
+            for alarm in script_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
 
 
 @main.group()

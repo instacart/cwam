@@ -1,55 +1,55 @@
 from .cloudwatch import CloudWatch
 
 
-class ELBInstance:
+class ALBInstance:
     def __init__(self, client, info):
         self.client = client
         self.arn = info.get('LoadBalancerArn')
         self.name = info.get('LoadBalancerName')
 
     def __str__(self):
-        return '(ELBInstance) Name: %s' % self.name
+        return '(ALBInstance) Name: %s' % self.name
 
     def default_dimension_name(self):
-        return 'LoadBalancerName'
+        return 'LoadBalancer'
 
     def default_dimension_value(self):
-        return self.name
+        return self.arn.partition('/')[-1]
 
     def dict(self):
         return {'LoadBalancerArn': self.arn,
                 'LoadBalancerName': self.name}
 
 
-class ELB(CloudWatch, object):
+class ALB(CloudWatch, object):
 
-    DEFAULT_NAMESPACE = 'AWS/ELB'
-    ALARM_NAME_PREFIX = 'ELB'
+    DEFAULT_NAMESPACE = 'AWS/ALB'
+    ALARM_NAME_PREFIX = 'ALB'
 
     def __init__(self, aws_access_key_id, aws_access_secret_key,
                  aws_default_region, debug=None):
-        super(ELB, self).__init__(aws_access_key_id=aws_access_key_id,
+        super(ALB, self).__init__(aws_access_key_id=aws_access_key_id,
                                   aws_access_secret_key=aws_access_secret_key,
                                   aws_default_region=aws_default_region,
                                   debug=debug)
         self.client = self.session.client('elbv2')
 
     def _describe_load_balancers(self):
-        elbs = []
+        albs = []
         pager = self.client.get_paginator('describe_load_balancers')
         for page in pager.paginate():
             for i in page['LoadBalancers']:
-                elbs.append(ELBInstance(self.client, i))
-        return elbs
+                albs.append(ALBInstance(self.client, i))
+        return albs
 
     def list(self):
         return self._describe_load_balancers()
 
     def remote_alarms(self, namespace=DEFAULT_NAMESPACE,
                       prefix=ALARM_NAME_PREFIX):
-        namespace = namespace or ELB.DEFAULT_NAMESPACE
-        prefix = prefix or ELB.ALARM_NAME_PREFIX
-        return super(ELB, self).remote_alarms(namespace=namespace,
+        namespace = namespace or ALB.DEFAULT_NAMESPACE
+        prefix = prefix or ALB.ALARM_NAME_PREFIX
+        return super(ALB, self).remote_alarms(namespace=namespace,
                                               prefix=prefix)
 
     def create(self, objects, namespace=DEFAULT_NAMESPACE,
@@ -59,7 +59,7 @@ class ELB(CloudWatch, object):
             raise "Exlude and Only option are mutually exclusive."
 
         instances = self._describe_load_balancers()
-        super(ELB, self).create(instances=instances,
+        super(ALB, self).create(instances=instances,
                                 objects=objects,
                                 namespace=namespace,
                                 prefix=prefix,

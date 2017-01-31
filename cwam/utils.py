@@ -90,5 +90,8 @@ def resolved_dict(name, instance, original, default, namespace=None,
             value = dim.get('Value')
             if value:
                 dim['Value'] = instance.dict().get(value)
+    else:
+        params['Dimensions'] = dict(Name=instance.default_dimension_name(),
+                                    Value=instance.default_dimension_value())
 
     return params
