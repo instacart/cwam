@@ -98,6 +98,11 @@ class CloudWatch(Client, object):
                         to_ignore_cause_humans.append(alarm)
                         if self.debug:
                             print '    - Not creating %s because human know better.' % alarm.name
+                            differences = list(diff(found1.dict(), alarm.dict()))
+                            for changes in differences:
+                                keys = changes[1]
+                                values = changes[2]
+                                print '      - %s | %s | %s' % (changes[0], keys, values)
                         continue
 
                     if alarm.is_valid():
