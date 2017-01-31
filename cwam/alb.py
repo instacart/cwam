@@ -23,7 +23,7 @@ class ALBInstance:
 
 class ALB(CloudWatch, object):
 
-    DEFAULT_NAMESPACE = 'AWS/ALB'
+    DEFAULT_NAMESPACE = 'AWS/ApplicationELB'
     ALARM_NAME_PREFIX = 'ALB'
 
     def __init__(self, aws_access_key_id, aws_access_secret_key,
