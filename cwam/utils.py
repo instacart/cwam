@@ -1,3 +1,8 @@
+def to_underscore(name):
+    import re
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
 def json_serializer(obj):
     """Default JSON serializer."""
     import calendar
@@ -93,5 +98,10 @@ def resolved_dict(name, instance, original, default, namespace=None,
     else:
         params['Dimensions'] = [dict(Name=instance.default_dimension_name(),
                                      Value=instance.default_dimension_value())]
+
+    for attr in params:
+        method_name = '%s_%s_modifier' % (to_underscore(params['MetricName']), attr.lower())
+        if(hasattr(instance, method_name)):
+            params[attr] = getattr(instance, method_name)(params[attr])
 
     return params

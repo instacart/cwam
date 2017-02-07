@@ -1,0 +1,71 @@
+# Metrics
+#
+# Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CacheMetrics.DimensionsAndSets.html
+#
+# SwapUsage: The amount of swap used on the host..
+#   Units: Bytes
+# FreeableMemory: The amount of free memory available on the host.
+#   Units: Bytes
+# CPUUtilization: The percentage of CPU utilization.
+#   Units: Percent
+# NetworkBytesIn: The number of bytes the host has read from the network.
+#   Units: Bytes
+# NetworkBytesOut: The number of bytes the host has written to the network.
+#   Units: Bytes
+#
+# Memcached
+# Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CacheMetrics.Memcached.html
+#
+# Redis
+# Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CacheMetrics.Redis.html
+
+elastic_caches:
+  namespace: AWS/ElasticCache
+  prefix: Cache
+  # only:
+  #   -
+  #     key: CacheClusterId
+  #     regexp: staging
+  #   -
+  #     key: CacheClusterId
+  #     regexp: production
+  # exclude:
+  #   -
+  #     key: CacheClusterId
+  #     regexp: staging
+  #   -
+  #     key: CacheClusterId
+  #     regexp: production
+  sns:
+    team1: arn:aws:sns:us-east-1:143926955520:team1
+    team2: arn:aws:sns:us-east-1:143926955520:team2
+    team3: arn:aws:sns:us-east-1:143926955520:team3
+  default:
+    all:
+      AlarmActions:
+        - team1
+        - team2
+  alarms:
+    all:
+      - HighCPUUtilization:
+          MetricName: CPUUtilization
+          Statistic: Average
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 5
+          Period: 60
+          Threshold: 90
+      - LowFreeableMemory:
+          MetricName: FreeableMemory
+          Statistic: Average
+          ComparisonOperator: LessThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          Period: 60
+          Threshold: 1000000000
+    my_elastic_cache_identifier:
+      - HighCPUUtilization:
+          MetricName: CPUUtilization
+          Statistic: Average
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 5
+          Period: 60
+          Threshold: 70

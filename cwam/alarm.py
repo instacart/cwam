@@ -4,7 +4,6 @@ class Alarm(object):
 
     def __init__(self, name, namespace=None, info={}):
         self.update(name=name, namespace=namespace, info=info)
-        self.original_dimensions = None
         self.resolved = False
 
     def update(self, name=None, namespace=None, info={}):

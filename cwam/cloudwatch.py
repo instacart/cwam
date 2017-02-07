@@ -61,7 +61,6 @@ class CloudWatch(Client, object):
         to_ignore_cause_humans_total = []
 
         for instance in instances:
-            print '\nELB: {0}\n'.format(instance.name)
             to_create = []
             to_update = []
             to_ignore_cause_up_to_date = []
