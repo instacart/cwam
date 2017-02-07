@@ -67,8 +67,9 @@ def parse_exclude_only(infos):
 
 def parse_default_alarm(namespace, objects):
     alarms = {}
-    for k, v in objects.iteritems():
-        alarms[k] = DefaultAlarm(namespace=namespace, info=v)
+    if objects:
+        for k, v in objects.iteritems():
+            alarms[k] = DefaultAlarm(namespace=namespace, info=v)
     return alarms
 
 
