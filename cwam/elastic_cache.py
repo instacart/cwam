@@ -1,7 +1,7 @@
 from .cloudwatch import CloudWatch
 
 
-class ElasticCacheInstance:
+class ElastiCacheInstance:
 
     TYPE_TO_CORES = {
         "cache.t2.micro": 1,
@@ -31,7 +31,7 @@ class ElasticCacheInstance:
         self.type = info.get('CacheNodeType')
 
     def __str__(self):
-        return '(ElasticCacheInstance) Name: %s, Engine: %s, Type: %s' % (self.name, self.engine, self.type)
+        return '(ElastiCacheInstance) Name: %s, Engine: %s, Type: %s' % (self.name, self.engine, self.type)
 
     def default_dimension_name(self):
         return 'CacheClusterId'
@@ -52,14 +52,14 @@ class ElasticCacheInstance:
                 'CacheClusterId': self.name}
 
 
-class ElasticCache(CloudWatch, object):
+class ElastiCache(CloudWatch, object):
 
     DEFAULT_NAMESPACE = 'AWS/ElastiCache'
     ALARM_NAME_PREFIX = 'Cache'
 
     def __init__(self, aws_access_key_id, aws_access_secret_key,
                  aws_default_region, debug=None):
-        super(ElasticCache, self).__init__(aws_access_key_id=aws_access_key_id,
+        super(ElastiCache, self).__init__(aws_access_key_id=aws_access_key_id,
                                            aws_access_secret_key=aws_access_secret_key,
                                            aws_default_region=aws_default_region,
                                            debug=debug)
@@ -70,7 +70,7 @@ class ElasticCache(CloudWatch, object):
         pager = self.client.get_paginator('describe_cache_clusters')
         for page in pager.paginate():
             for i in page['CacheClusters']:
-                caches.append(ElasticCacheInstance(self.client, i))
+                caches.append(ElastiCacheInstance(self.client, i))
         return caches
 
     def list(self):
@@ -78,9 +78,9 @@ class ElasticCache(CloudWatch, object):
 
     def remote_alarms(self, namespace=DEFAULT_NAMESPACE,
                       prefix=ALARM_NAME_PREFIX):
-        namespace = namespace or ElasticCache.DEFAULT_NAMESPACE
-        prefix = prefix or ElasticCache.ALARM_NAME_PREFIX
-        return super(ElasticCache, self).remote_alarms(namespace=namespace,
+        namespace = namespace or ElastiCache.DEFAULT_NAMESPACE
+        prefix = prefix or ElastiCache.ALARM_NAME_PREFIX
+        return super(ElastiCache, self).remote_alarms(namespace=namespace,
                                                        prefix=prefix)
 
     def create(self, objects, namespace=DEFAULT_NAMESPACE,
@@ -94,7 +94,7 @@ class ElasticCache(CloudWatch, object):
         redis_instances = [i for i in instances if i.engine == 'redis']
         memcached_instances = [i for i in instances if i not in redis_instances]
 
-        super(ElasticCache, self).create(instances=redis_instances,
+        super(ElastiCache, self).create(instances=redis_instances,
                                          objects=objects,
                                          namespace=namespace,
                                          prefix='%s/redis' % prefix,
@@ -104,7 +104,7 @@ class ElasticCache(CloudWatch, object):
                                          sns=sns,
                                          simulate=simulate)
 
-        super(ElasticCache, self).create(instances=memcached_instances,
+        super(ElastiCache, self).create(instances=memcached_instances,
                                          objects=objects,
                                          namespace=namespace,
                                          prefix='%s/memcached' % prefix,

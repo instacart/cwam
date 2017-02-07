@@ -12,7 +12,7 @@ from .alarm import Alarm
 from .alb import ALB
 from .elb import ELB
 from .rds import RDS
-from .elastic_cache import ElasticCache
+from .elastic_cache import ElastiCache
 from .utils import json_serializer
 
 # Fix Python 2.x vs 3.x.
@@ -509,8 +509,8 @@ def elastic_cache(ctx):
 @elastic_cache.command(name='list')  # noqa: F811
 @click.pass_context
 def elastic_cache_list(ctx):
-    """List ElasticCache clusters."""
-    instances = ElasticCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+    """List ElastiCache clusters."""
+    instances = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
@@ -540,7 +540,7 @@ def elastic_cache_create(ctx, template, simulate):
         ctx.fail('Conf file not found. Make sure --template is a valid path.')
 
     if len(alarms) > 0:
-        elastic_cache = ElasticCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+        elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
@@ -588,7 +588,7 @@ def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
         namespace = None
         prefix = None
 
-    elastic_cache = ElasticCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+    elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])

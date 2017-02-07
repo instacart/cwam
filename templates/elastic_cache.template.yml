@@ -20,7 +20,7 @@
 # Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CacheMetrics.Redis.html
 
 elastic_caches:
-  namespace: AWS/ElasticCache
+  namespace: AWS/ElastiCache
   prefix: Cache
   # only:
   #   -
