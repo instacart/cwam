@@ -56,15 +56,17 @@ class CloudWatch(Client, object):
             instances = filter_exclude(instances, exclude)
 
         to_create_total = []
-        to_update_total = []
-        to_ignore_cause_up_to_date_total = []
-        to_ignore_cause_humans_total = []
+        to_update_scripted_total = []
+        to_update_humans_total = []
+        to_ignore_scripted_total = []
+        to_ignore_humans_total = []
 
         for instance in instances:
             to_create = []
-            to_update = []
-            to_ignore_cause_up_to_date = []
-            to_ignore_cause_humans = []
+            to_update_scripted = []
+            to_update_humans = []
+            to_ignore_scripted = []
+            to_ignore_humans = []
             all_alarms = objects.get('all') or []
             alarms = objects.get(instance.name) or []
             alarms_names = [a.name for a in alarms]
@@ -93,36 +95,43 @@ class CloudWatch(Client, object):
                     if found2 and len(found2) > 0:
                         found2 = found2[0]
 
-                    if all([found1, not found2]):
-                        to_ignore_cause_humans.append(alarm)
-                        if self.debug:
-                            print '    - Not creating %s because human know better.' % alarm.name
-                            differences = list(diff(found1.dict(), alarm.dict()))
-                            for changes in differences:
-                                keys = changes[1]
-                                values = changes[2]
-                                print '      - %s | %s | %s' % (changes[0], keys, values)
-                        continue
+                    is_human = all([found1, not found2])
 
                     if alarm.is_valid():
-                        if found2:
+                        if is_human:
+                            alarm.is_human = True
+                            found1.is_human = True
+                            dict1 = found1.dict()
+                        else:
                             dict1 = found2.dict()
-                            dict2 = alarm.dict()
+
+                        dict2 = alarm.dict()
+
+                        if dict1 and dict2:
                             differences = list(diff(dict1, dict2))
                             if len(differences) > 0:
-                                to_update.append(alarm)
+                                if is_human:
+                                    to_update_humans.append(alarm)
+                                else:
+                                    to_update_scripted.append(alarm)
                                 if self.debug:
-                                    print '    - Update action.'
+                                    print '    - Update action. (Human alarm: %s)' % is_human
                                     print '      - Diff:'
                                     for changes in differences:
                                         keys = changes[1]
                                         values = changes[2]
                                         print '        - %s | %s | %s' % (changes[0], keys, values)
                             else:
-                                if self.debug:
-                                    print '      - Already up to date.'
-                                to_ignore_cause_up_to_date.append(alarm)
-                                continue
+                                if is_human:
+                                    if self.debug:
+                                        print '      - Already up to date.'
+                                    to_ignore_humans.append(alarm)
+                                    continue
+                                else:
+                                    if self.debug:
+                                        print '      - Already up to date.'
+                                    to_ignore_scripted.append(alarm)
+                                    continue
                         else:
                             to_create.append(alarm)
                             if self.debug:
@@ -139,20 +148,23 @@ class CloudWatch(Client, object):
                         self.create_alarm(**alarm.dict())
 
                 print '\n  - Create total: {0}'.format(len(to_create))
-                print '  - Update total: {0}'.format(len(to_update))
-                print '  - Ignore total: (Up to date: {0} | Humans: {1})'.format(len(to_ignore_cause_up_to_date),
-                                                                                 len(to_ignore_cause_humans))
+                print '  - Update total: (Scripted: {0} | Humans: {1})'.format(len(to_update_scripted),
+                                                                                 len(to_update_humans))
+                print '  - Ignore total: (Scripted: {0} | Humans: {1})'.format(len(to_ignore_scripted),
+                                                                                 len(to_ignore_humans))
 
-                to_update_total.append(to_update)
                 to_create_total.append(to_create)
-                to_ignore_cause_up_to_date_total.append(to_ignore_cause_up_to_date)
-                to_ignore_cause_humans_total.append(to_ignore_cause_humans)
+                to_update_scripted_total.append(to_update_scripted)
+                to_update_humans_total.append(to_update_humans)
+                to_ignore_scripted_total.append(to_ignore_scripted)
+                to_ignore_humans_total.append(to_ignore_humans)
 
                 print # New line
             else:
                 print '  - None'
 
         print '\nCreate total: {0}'.format(sum([len(a) for a in to_create_total]))
-        print 'Update total: {0}'.format(sum([len(a) for a in to_update_total]))
-        print 'Ignore total: (Up to date: {0} | Humans: {1})'.format(sum([len(a) for a in to_ignore_cause_up_to_date_total]),
-                                                                     sum([len(a) for a in to_ignore_cause_humans_total]))
+        print 'Update total: (Scripted: {0} | Humans: {1})'.format(sum([len(a) for a in to_update_scripted_total]),
+                                                                     sum([len(a) for a in to_update_humans_total]))
+        print 'Ignore total: (Scripted: {0} | Humans: {1})'.format(sum([len(a) for a in to_ignore_scripted_total]),
+                                                                     sum([len(a) for a in to_ignore_humans_total]))
