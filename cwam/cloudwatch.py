@@ -103,7 +103,7 @@ class CloudWatch(Client, object):
                             found1.is_human = True
                             dict1 = found1.dict()
                         else:
-                            dict1 = found2.dict()
+                            dict1 = found2.dict() if type(found2).__name__ == 'Alarm' else {}
 
                         dict2 = alarm.dict()
 
