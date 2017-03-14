@@ -12,6 +12,7 @@ from .alarm import Alarm
 from .alb import ALB
 from .elb import ELB
 from .rds import RDS
+from .ec2 import EC2
 from .elastic_cache import ElastiCache
 from .utils import json_serializer
 
@@ -39,6 +40,9 @@ RDS_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
 ELASTIC_CACHE_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                               '.cwam',
                                               'elastic_cache.template.yml')
+EC2_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
+                                    '.cwam',
+                                    'elb.template.yml')
 
 
 def json_dumps(dict, pretty=False):
@@ -593,6 +597,117 @@ def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = elastic_cache.remote_alarms(namespace=namespace,
+                                                    prefix=prefix)
+
+    if not no_human:
+        click.echo('Human alarms.')
+        if len(human_alarms) > 0:
+            for alarm in human_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+    if not no_script:
+        click.echo('Script alarms.')
+        if len(script_alarms) > 0:
+            for alarm in script_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+@main.group()
+@click.pass_context
+def ec2(ctx):
+    pass
+
+
+@ec2.command(name='list')  # noqa: F811
+@click.pass_context
+def ec2_list(ctx):
+    """List EC2 clusters."""
+    instances = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                    aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                    debug=ctx.obj['DEBUG']).list()
+    for instance in instances:
+        click.echo(instance)
+
+
+@ec2.command(name='create')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=EC2_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+@click.option('--simulate', '-s', is_flag=True, default=False,
+              help='Simulate only. Do not take actions')
+def ec2_create(ctx, template, simulate):
+    """Create alarms configured in --template file"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['ec2']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+        only = template.get('only')
+        exclude = template.get('exclude')
+        sns = template.get('sns')
+        default = template.get('default')
+        alarms = template.get('alarms')
+    else:
+        ctx.fail('Conf file not found. Make sure --template is a valid path.')
+
+    if len(alarms) > 0:
+        ec2 = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                  aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                  debug=ctx.obj['DEBUG'])
+        ec2.create(objects=parse_alarms(namespace, alarms),
+                   namespace=namespace,
+                   prefix=prefix,
+                   default=parse_default_alarm(namespace, default),
+                   only=parse_exclude_only(only),
+                   exclude=parse_exclude_only(exclude),
+                   sns=sns,
+                   simulate=simulate)
+    else:
+        click.echo('No alarms found.')
+
+
+@ec2.command(name='local-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=EC2_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+def ec2_local_alarms(ctx, template):
+    namespace, alarms = parse_alarms_yml(ctx, 'ec2', template)
+    for k, v in parse_alarms(namespace, alarms).iteritems():
+        click.echo(k)
+        for alarm in v:
+            click.echo(str(alarm))
+
+
+@ec2.command(name='remote-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=EC2_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+@click.option('--no-human', '-h', is_flag=True, default=False,
+              help='Show only human alarms.')
+@click.option('--no-script', '-s', is_flag=True, default=False,
+              help='Show only script alarms.')
+def ec2_remote_alarms(ctx, template, no_human, no_script):
+    """List alarms configured on AWS"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['ec2']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+    else:
+        namespace = None
+        prefix = None
+
+    ec2 = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+              debug=ctx.obj['DEBUG'])
+    human_alarms, script_alarms = ec2.remote_alarms(namespace=namespace,
                                                     prefix=prefix)
 
     if not no_human:
