@@ -25,9 +25,6 @@ except NameError:
 
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-CONF_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                 '.cwam',
-                                 'conf.yml')
 ALB_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                     '.cwam',
                                     'alb.template.yml')
@@ -111,45 +108,16 @@ def parse_alarms_yml(ctx, command, conf):
 @click.option('--aws-access-secret-key', '-s', type=UNICODE_TYPE,
               envvar='AWS_SECRET_ACCESS_KEY',
               help='AWS Secret Access Key.')
+@click.option('--aws-session-token', '-t', type=UNICODE_TYPE,
+              envvar='AWS_SESSION_TOKEN',
+              help='AWS Secret Access Key.')
 @click.option('--aws_default_region', '-r', type=UNICODE_TYPE,
               envvar='AWS_DEFAULT_REGION',
+              default='us-east-1',
               help='AWS Region.')
-@click.option('--conf', '-c', type=UNICODE_TYPE,
-              default=CONF_FILE,
-              help='Path to configuration file. Default: {0}.'.format(CONF_FILE))
 @click.pass_context
 def main(ctx, debug, pretty, aws_access_key_id, aws_access_secret_key,
-         aws_default_region, conf):
-    if not aws_access_key_id:
-        if os.path.isfile(conf):
-            aws = parse_yml(ctx, conf)['aws']
-            aws_access_key_id = aws['aws_access_key_id']
-        else:
-            ctx.fail("""AWS Access Key ID not found.
-AWS Access Key ID not found in AWS_ACCESS_KEY_ID environment variable.
-AWS Access Key ID not found in -k/--aws-access-key-id option.
-AWS Access Key ID not found in configuration file: {0}.""".format(conf))
-
-    if not aws_access_secret_key:
-        if os.path.isfile(conf):
-            aws = parse_yml(ctx, conf)['aws']
-            aws_access_secret_key = aws['aws_access_secret_key']
-        else:
-            ctx.fail("""AWS Secret Access Key not found.
-AWS Secret Access Key not found in AWS_SECRET_ACCESS_KEY environment variable.
-AWS Secret Access Key not found in -s/--aws-access-secret-key option.
-AWS Secret Access Key not found in configuration file: {0}.""".format(conf))
-
-    if not aws_default_region:
-        if os.path.isfile(conf):
-            aws = parse_yml(ctx, conf)['aws']
-            aws_access_secret_key = aws['aws_default_region']
-        else:
-            ctx.fail("""AWS Region not found.
-AWS Region not found in AWS_DEFAULT_REGION environment variable.
-AWS Region not found in -r/--region option.
-AWS Region not found in configuration file: {0}.""".format(conf))
-
+         aws_session_token, aws_default_region):
     ctx.obj = {}
     ctx.obj['PRETTY'] = pretty if pretty else None
     ctx.obj['DEBUG'] = debug if debug else None
@@ -163,6 +131,11 @@ AWS Region not found in configuration file: {0}.""".format(conf))
         ctx.obj['AWS_SECRET_ACCESS_KEY'] = aws_access_secret_key
     else:
         ctx.obj['AWS_SECRET_ACCESS_KEY'] = None
+
+    if aws_session_token:
+        ctx.obj['AWS_SESSION_TOKEN'] = aws_session_token
+    else:
+        ctx.obj['AWS_SESSION_TOKEN'] = None
 
     if aws_default_region:
         ctx.obj['AWS_DEFAULT_REGION'] = aws_default_region
@@ -181,6 +154,7 @@ def alb_list(ctx):
     """List ALB."""
     instances = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
     for instance in instances:
@@ -211,6 +185,7 @@ def alb_create(ctx, template, simulate):
     if len(alarms) > 0:
         alb = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
         alb.create(objects=parse_alarms(namespace, alarms),
@@ -259,6 +234,7 @@ def alb_remote_alarms(ctx, template, no_human, no_script):
 
     alb = ALB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = alb.remote_alarms(namespace=namespace,
@@ -293,6 +269,7 @@ def elb_list(ctx):
     """List ELB."""
     instances = ELB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
     for instance in instances:
@@ -323,6 +300,7 @@ def elb_create(ctx, template, simulate):
     if len(alarms) > 0:
         elb = ELB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
         elb.create(objects=parse_alarms(namespace, alarms),
@@ -371,6 +349,7 @@ def elb_remote_alarms(ctx, template, no_human, no_script):
 
     elb = ELB(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = elb.remote_alarms(namespace=namespace,
@@ -405,6 +384,7 @@ def rds_list(ctx):
     """List RDS clusters."""
     instances = RDS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
     for instance in instances:
@@ -435,6 +415,7 @@ def rds_create(ctx, template, simulate):
     if len(alarms) > 0:
         rds = RDS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
         rds.create(objects=parse_alarms(namespace, alarms),
@@ -483,6 +464,7 @@ def rds_remote_alarms(ctx, template, no_human, no_script):
 
     rds = RDS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = rds.remote_alarms(namespace=namespace,
@@ -516,6 +498,7 @@ def elastic_cache_list(ctx):
     """List ElastiCache clusters."""
     instances = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
     for instance in instances:
@@ -546,6 +529,7 @@ def elastic_cache_create(ctx, template, simulate):
     if len(alarms) > 0:
         elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
         elastic_cache.create(objects=parse_alarms(namespace, alarms),
@@ -594,6 +578,7 @@ def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
 
     elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = elastic_cache.remote_alarms(namespace=namespace,
@@ -627,6 +612,7 @@ def ec2_list(ctx):
     """List EC2 clusters."""
     instances = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                     debug=ctx.obj['DEBUG']).list()
     for instance in instances:
@@ -657,6 +643,7 @@ def ec2_create(ctx, template, simulate):
     if len(alarms) > 0:
         ec2 = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                   aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                   aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                   debug=ctx.obj['DEBUG'])
         ec2.create(objects=parse_alarms(namespace, alarms),
@@ -705,6 +692,7 @@ def ec2_remote_alarms(ctx, template, no_human, no_script):
 
     ec2 = EC2(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
               aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = ec2.remote_alarms(namespace=namespace,

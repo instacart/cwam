@@ -57,10 +57,11 @@ class ElastiCache(CloudWatch, object):
     DEFAULT_NAMESPACE = 'AWS/ElastiCache'
     ALARM_NAME_PREFIX = 'Cache'
 
-    def __init__(self, aws_access_key_id, aws_access_secret_key,
-                 aws_default_region, debug=None):
+    def __init__(self, aws_access_key_id = None, aws_access_secret_key = None,
+                 aws_session_token = None, aws_default_region = None, debug=None):
         super(ElastiCache, self).__init__(aws_access_key_id=aws_access_key_id,
                                            aws_access_secret_key=aws_access_secret_key,
+                                           aws_session_token=aws_session_token,
                                            aws_default_region=aws_default_region,
                                            debug=debug)
         self.client = self.session.client('elasticache')
