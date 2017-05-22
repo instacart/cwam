@@ -98,6 +98,15 @@ class CloudWatch(Client, object):
 
                     is_human = all([found1, not found2])
 
+                    if "MaximumUsedTransactionIDs" in alarm.metric_name:
+                        alarm.ok_actions = [sns['infra']]
+                        alarm.alarm_actions = [sns['infra']]
+                        alarm.threshold = 1000000000
+
+                    if "HTTPCode_ELB_5XX_Count" in alarm.metric_name:
+                        alarm.ok_actions = [sns['infra']]
+                        alarm.alarm_actions = [sns['infra']]
+
                     if alarm.is_valid():
                         if is_human:
                             alarm.is_human = True
@@ -107,11 +116,6 @@ class CloudWatch(Client, object):
                             dict1 = found2.dict() if type(found2).__name__ == 'Alarm' else {}
 
                         dict2 = alarm.dict()
-
-                        metric_name = dict2.get('MetricName')
-                        if metric_name and "MaximumUsedTransactionIDs" in metric_name:
-                            dict2['OKActions'] = sns['infra']
-                            dict2['AlarmActions'] = sns['infra']
 
                         if dict1 and dict2:
                             differences = list(diff(dict1, dict2))
