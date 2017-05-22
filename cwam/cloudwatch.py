@@ -108,6 +108,11 @@ class CloudWatch(Client, object):
 
                         dict2 = alarm.dict()
 
+                        metric_name = dict2.get('MetricName')
+                        if metric_name and "MaximumUsedTransactionIDs" in metric_name:
+                            dict2['OKActions'] = sns['infra']
+                            dict2['AlarmActions'] = sns['infra']
+
                         if dict1 and dict2:
                             differences = list(diff(dict1, dict2))
                             if len(differences) > 0:
