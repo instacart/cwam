@@ -40,6 +40,21 @@ def filter_exclude(iterable, only):
                 out.append(i)
     return out
 
+def extract_alarm_actions(params, action):
+    if params.get(action):
+        actions_sns = []
+        for _sns in params.get(action):
+            if _sns.startswith('arn:'):
+                actions_sns.append(_sns)
+            elif sns.get(_sns):
+                actions_sns.append(sns.get(_sns))
+
+        if (len(actions_sns) < 1 and default.get('sns'):
+            for _sns in default.get('sns').get(action):
+                if _sns.startswith('arn:'):
+                    actions_sns.append(_sns)
+
+        return actions_sns
 
 def resolved_dict(name, instance, original, default, namespace=None,
                   prefix=None, sns={}):
@@ -69,35 +84,9 @@ def resolved_dict(name, instance, original, default, namespace=None,
 
     params = dict(original, **default_params)
 
-    if params.get('OKActions'):
-        ok_actions_sns = []
-        for _sns in params.get('OKActions'):
-            if _sns.startswith('arn:'):
-                ok_actions_sns.append(_sns)
-            elif sns.get(_sns):
-                ok_actions_sns.append(sns.get(_sns))
-
-        if (len(ok_actions_sns) < 1 and default.get('sns'):
-            for _sns in default.get('sns').get('OKActions'):
-                if _sns.startswith('arn:'):
-                    ok_actions_sns.append(_sns)
-
-        params['OKActions'] = ok_actions_sns
-
-    if params.get('AlarmActions'):
-        alarm_actions_sns = []
-        for _sns in params.get('AlarmActions'):
-            if _sns.startswith('arn:'):
-                alarm_actions_sns.append(_sns)
-            elif sns.get(_sns):
-                alarm_actions_sns.append(sns.get(_sns))
-
-        if (len(alarm_actions_sns) < 1 and default.get('sns'):
-            for _sns in default.get('sns').get('AlarmActions'):
-                if _sns.startswith('arn:'):
-                    alarm_actions_sns.append(_sns)
-
-        params['AlarmActions'] = alarm_actions_sns
+    params['OKActions'] = extract_alarm_actions(params, 'OKActions')
+    params['AlarmActions'] = extract_alarm_actions(params, 'AlarmActions')
+    params['InsufficientDataActions'] = extract_alarm_actions(params, 'InsufficientDataActions')
 
     if prefix is not None:
         params['AlarmName'] = '{0}/{1}/{2}'.format(prefix, instance.name, name)
