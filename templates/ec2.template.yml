@@ -20,7 +20,6 @@ ec2:
   #     key: AutoScalingGroupName
   #     regexp: production
   sns:
-    default: arn:aws:sns:us-east-1:143926955520:team1
     team1: arn:aws:sns:us-east-1:143926955510:pagerduty-team1
     team2: arn:aws:sns:us-east-1:143926955510:pagerduty-team2
     team3: arn:aws:sns:us-east-1:143926955510:pagerduty-team3
@@ -28,9 +27,13 @@ ec2:
     all:
       EvaluationPeriods: 3
       Period: 60
+    sns:
       AlarmActions:
         - team1
-        - team2
+      OKActions:
+        - team1
+      InsufficientActions:
+        - team1
   alarms:
     all:
       - HighCPUUtilization:

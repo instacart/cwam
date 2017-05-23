@@ -76,6 +76,12 @@ def resolved_dict(name, instance, original, default, namespace=None,
                 ok_actions_sns.append(_sns)
             elif sns.get(_sns):
                 ok_actions_sns.append(sns.get(_sns))
+
+        if (len(ok_actions_sns) < 1 and default.get('sns'):
+            for _sns in default.get('sns').get('OKActions'):
+                if _sns.startswith('arn:'):
+                    ok_actions_sns.append(_sns)
+
         params['OKActions'] = ok_actions_sns
 
     if params.get('AlarmActions'):
@@ -86,9 +92,10 @@ def resolved_dict(name, instance, original, default, namespace=None,
             elif sns.get(_sns):
                 alarm_actions_sns.append(sns.get(_sns))
 
-        if (len(alarm_actions_sns) < 1 and sns['default'] and
-            sns['default'].startswith('arn:')):
-                alarm_actions_sns.append(sns['default'])
+        if (len(alarm_actions_sns) < 1 and default.get('sns'):
+            for _sns in default.get('sns').get('AlarmActions'):
+                if _sns.startswith('arn:'):
+                    alarm_actions_sns.append(_sns)
 
         params['AlarmActions'] = alarm_actions_sns
 
