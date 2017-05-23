@@ -37,6 +37,7 @@ elastic_caches:
   #     key: CacheClusterId
   #     regexp: production
   sns:
+    default: arn:aws:sns:us-east-1:143926955520:team1
     team1: arn:aws:sns:us-east-1:143926955520:team1
     team2: arn:aws:sns:us-east-1:143926955520:team2
     team3: arn:aws:sns:us-east-1:143926955520:team3

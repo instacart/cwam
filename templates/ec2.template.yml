@@ -20,6 +20,7 @@ ec2:
   #     key: AutoScalingGroupName
   #     regexp: production
   sns:
+    default: arn:aws:sns:us-east-1:143926955520:team1
     team1: arn:aws:sns:us-east-1:143926955510:pagerduty-team1
     team2: arn:aws:sns:us-east-1:143926955510:pagerduty-team2
     team3: arn:aws:sns:us-east-1:143926955510:pagerduty-team3
