@@ -86,8 +86,8 @@ def resolved_dict(name, instance, original, default, namespace=None,
             elif sns.get(_sns):
                 alarm_actions_sns.append(sns.get(_sns))
 
-        if ( len(alarm_actions_sns) < 1 and sns['default'] and
-            sns['default'].startswith('arn:') ):
+        if (len(alarm_actions_sns) < 1 and sns['default'] and
+            sns['default'].startswith('arn:')):
                 alarm_actions_sns.append(sns['default'])
 
         params['AlarmActions'] = alarm_actions_sns
