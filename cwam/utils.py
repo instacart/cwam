@@ -40,21 +40,24 @@ def filter_exclude(iterable, only):
                 out.append(i)
     return out
 
-def extract_alarm_actions(params, action):
+def extract_alarm_actions(default, params, sns, action):
+    actions_sns = []
     if params.get(action):
-        actions_sns = []
         for _sns in params.get(action):
             if _sns.startswith('arn:'):
                 actions_sns.append(_sns)
             elif sns.get(_sns):
                 actions_sns.append(sns.get(_sns))
 
-        if (len(actions_sns) < 1 and default.get('sns'):
-            for _sns in default.get('sns').get(action):
-                if _sns.startswith('arn:'):
-                    actions_sns.append(_sns)
+    if len(actions_sns) < 1 and default.get('sns'):
+        _sns = default.get('sns').get(action)
+        if _sns:
+            for s in _sns:
+                s = sns[s]
+                if s and s.startswith('arn:'):
+                    actions_sns.append(s)
 
-        return actions_sns
+    return actions_sns
 
 def resolved_dict(name, instance, original, default, namespace=None,
                   prefix=None, sns={}):
@@ -84,9 +87,9 @@ def resolved_dict(name, instance, original, default, namespace=None,
 
     params = dict(original, **default_params)
 
-    params['OKActions'] = extract_alarm_actions(params, 'OKActions')
-    params['AlarmActions'] = extract_alarm_actions(params, 'AlarmActions')
-    params['InsufficientDataActions'] = extract_alarm_actions(params, 'InsufficientDataActions')
+    params['AlarmActions'] = extract_alarm_actions(default, params, sns, 'AlarmActions')
+    params['OKActions'] = extract_alarm_actions(default, params, sns, 'OKActions')
+    params['InsufficientDataActions'] = extract_alarm_actions(default, params, sns, 'InsufficientDataActions')
 
     if prefix is not None:
         params['AlarmName'] = '{0}/{1}/{2}'.format(prefix, instance.name, name)

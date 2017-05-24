@@ -71,6 +71,7 @@ def parse_default_alarm(namespace, objects):
     if objects:
         for k, v in objects.iteritems():
             alarms[k] = DefaultAlarm(namespace=namespace, info=v)
+    alarms['sns'] = objects.get('sns')
     return alarms
 
 
