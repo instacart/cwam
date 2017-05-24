@@ -55,10 +55,13 @@ rds:
     team2: arn:aws:sns:us-east-1:143926955520:team2
     team3: arn:aws:sns:us-east-1:143926955520:team3
   default:
-    all:
+    sns:
       AlarmActions:
         - team1
-        - team2
+      OKActions:
+        - team1
+      InsufficientActions:
+        - team1
   alarms:
     all:
       - LowFreeStorageSpace:

@@ -27,9 +27,13 @@ ec2:
     all:
       EvaluationPeriods: 3
       Period: 60
+    sns:
       AlarmActions:
         - team1
-        - team2
+      OKActions:
+        - team1
+      InsufficientActions:
+        - team1
   alarms:
     all:
       - HighCPUUtilization:
