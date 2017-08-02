@@ -99,13 +99,13 @@ class CloudWatch(Client, object):
                     is_human = all([found1, not found2])
 
                     if "MaximumUsedTransactionIDs" in alarm.metric_name:
-                        alarm.ok_actions = [sns['infra']]
-                        alarm.alarm_actions = [sns['infra']]
+                        alarm.ok_actions = [sns['default']]
+                        alarm.alarm_actions = [sns['default']]
                         alarm.threshold = 1000000000
 
                     if "HTTPCode_ELB_5XX_Count" in alarm.metric_name:
-                        alarm.ok_actions = [sns['infra']]
-                        alarm.alarm_actions = [sns['infra']]
+                        alarm.ok_actions = [sns['default']]
+                        alarm.alarm_actions = [sns['default']]
 
                     if alarm.is_valid():
                         if is_human:

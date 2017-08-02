@@ -49,13 +49,10 @@ def extract_alarm_actions(default, params, sns, action):
             elif sns.get(_sns):
                 actions_sns.append(sns.get(_sns))
 
-    if len(actions_sns) < 1 and default.get('sns'):
-        _sns = default.get('sns').get(action)
-        if _sns:
-            for s in _sns:
-                s = sns[s]
-                if s and s.startswith('arn:'):
-                    actions_sns.append(s)
+    if len(actions_sns) < 1 and sns.get('default'):
+        _sns = sns.get('default')
+        if _sns and _sns.startswith('arn:'):
+            actions_sns.append(_sns)
 
     return actions_sns
 
