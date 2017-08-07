@@ -16,6 +16,10 @@ class ALBInstance:
     def default_dimension_value(self):
         return self.arn.partition('/')[-1]
 
+    def default_dimensions(self):
+        return [dict(Name=self.default_dimension_name(),
+                     Value=self.default_dimension_value())]
+
     def dict(self):
         return {'LoadBalancerArn': self.arn,
                 'LoadBalancerName': self.name}
@@ -57,7 +61,7 @@ class ALB(CloudWatch, object):
                prefix=ALARM_NAME_PREFIX, default=None, only=None,
                exclude=None, sns={}, simulate=False):
         if exclude is not None and only is not None:
-            raise "Exlude and Only option are mutually exclusive."
+            raise "Exclude and Only option are mutually exclusive."
 
         instances = self._describe_load_balancers()
         super(ALB, self).create(instances=instances,

@@ -97,8 +97,7 @@ def resolved_dict(name, instance, original, default, namespace=None,
             if value:
                 dim['Value'] = instance.dict().get(value)
     else:
-        params['Dimensions'] = [dict(Name=instance.default_dimension_name(),
-                                     Value=instance.default_dimension_value())]
+        params['Dimensions'] = instance.default_dimensions()
 
     for attr in params:
         method_name = '%s_%s_modifier' % (to_underscore(params['MetricName']), attr.lower())
