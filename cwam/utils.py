@@ -3,6 +3,7 @@ def to_underscore(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
+
 def json_serializer(obj):
     """Default JSON serializer."""
     import calendar
@@ -40,6 +41,7 @@ def filter_exclude(iterable, only):
                 out.append(i)
     return out
 
+
 def extract_alarm_actions(default, params, sns, action):
     actions_sns = []
     if params.get(action):
@@ -55,6 +57,7 @@ def extract_alarm_actions(default, params, sns, action):
             actions_sns.append(_sns)
 
     return actions_sns
+
 
 def resolved_dict(name, instance, original, default, namespace=None,
                   prefix=None, sns={}):
@@ -72,8 +75,13 @@ def resolved_dict(name, instance, original, default, namespace=None,
             if not default_all_params[k]:
                 del default_all_params[k]
 
-    if default.get(instance.name):
-        default_instance_params = default.get(instance.name).dict()
+    filtered_instance = filter(lambda i: i in instance.name, default.keys())
+    instance_name = instance.name
+    if len(filtered_instance) > 0:
+        instance_name = max(filtered_instance, key=len)
+
+    if default.get(instance_name):
+        default_instance_params = default.get(instance_name).dict()
         for k in default_instance_params.keys():
             if not default_instance_params[k]:
                 del default_instance_params[k]
