@@ -1,0 +1,107 @@
+pgbouncer:
+  namespace: ISC
+  prefix: PGBOUNCER
+  exclude:
+    -
+      key: PGBouncerIdentifier
+      regexp: staging|test|stg
+  sns:
+    team1: arn:aws:sns:us-east-1:143926955510:pagerduty-team1
+    team2: arn:aws:sns:us-east-1:143926955510:pagerduty-team2
+    team3: arn:aws:sns:us-east-1:143926955510:pagerduty-team3
+  default:
+    bouncer-host:
+      OKActions:
+        - team1
+      AlarmActions:
+        - team1
+
+  alarms:
+    all:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 100
+    i-0d7ee21b40a661014.shopper-web.shoppers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 10
+    i-06ce58bb59ec709fe.shopper-web.shoppers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 10
+    i-0380b6decc0929484.shopper-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-0d61cdae27546f1bc.shopper-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-0296e437c5bf12730.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          MetricName: ClientsWaiting
+          Period: 180
+          Statistic: Average
+          Threshold: 30
+    i-0a48e54286498e638.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-05e87bf5169707d9f.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-00fe036a3e20b07f0.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-0dc762cf3438f2727.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30
+    i-0523b572eaf4ee5ec.consumer-web.customers.pgbouncer.carrot.onl:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 30

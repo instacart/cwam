@@ -51,7 +51,7 @@ class PGBouncer(CloudWatch, object):
         all_hosts = set()
         map(lambda alarm: all_hosts.add(
             PGBouncerInstance(alarm.name.split('/')[1])), alarms)
-        return all_hosts
+        return list(all_hosts)
 
     def remote_alarms(self, namespace=DEFAULT_NAMESPACE,
                       prefix=ALARM_NAME_PREFIX):
