@@ -1,0 +1,27 @@
+pgbouncer:
+  namespace: ISC
+  prefix: PGBOUNCER
+  exclude:
+    -
+      key: PGBouncerIdentifier
+      regexp: staging|test|stg
+  sns:
+    team1: arn:aws:sns:us-east-1:143926955510:pagerduty-team1
+    team2: arn:aws:sns:us-east-1:143926955510:pagerduty-team2
+    team3: arn:aws:sns:us-east-1:143926955510:pagerduty-team3
+  default:
+    bouncer-host:
+      OKActions:
+        - team1
+      AlarmActions:
+        - team1
+
+  alarms:
+    all:
+      - ClientsWaiting:
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 3
+          MetricName: ClientsWaiting
+          Period: 60
+          Statistic: Average
+          Threshold: 100

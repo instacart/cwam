@@ -97,6 +97,10 @@ class EC2Instance:
     def default_dimension_value(self):
         return self.instance_id
 
+    def default_dimensions(self):
+        return [dict(Name=self.default_dimension_name(),
+                     Value=self.default_dimension_value())]
+
     def cpu_utilization_threshold_modifier(self, threshold):
         if self.type not in self.TYPE_TO_CORES:
             raise Exception('Unknown instance type %s.' % self.type)

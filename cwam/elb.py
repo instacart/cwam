@@ -16,6 +16,10 @@ class ELBInstance:
     def default_dimension_value(self):
         return self.name
 
+    def default_dimensions(self):
+        return [dict(Name=self.default_dimension_name(),
+                     Value=self.default_dimension_value())]
+
     def dict(self):
         return {'LoadBalancerArn': self.arn,
                 'LoadBalancerName': self.name}

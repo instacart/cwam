@@ -39,6 +39,10 @@ class ElastiCacheInstance:
     def default_dimension_value(self):
         return self.name
 
+    def default_dimensions(self):
+        return [dict(Name=self.default_dimension_name(),
+                     Value=self.default_dimension_value())]
+
     def cpu_utilization_threshold_modifier(self, threshold):
         if self.engine == 'redis':
             if self.type not in self.TYPE_TO_CORES:

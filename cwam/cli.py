@@ -10,6 +10,7 @@ import click
 from .default_alarm import DefaultAlarm
 from .alarm import Alarm
 from .alb import ALB
+from .pgbouncer import PGBouncer
 from .elb import ELB
 from .rds import RDS
 from .ec2 import EC2
@@ -39,7 +40,10 @@ ELASTIC_CACHE_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                               'elastic_cache.template.yml')
 EC2_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
                                     '.cwam',
-                                    'elb.template.yml')
+                                    'ec2.template.yml')
+PGBOUNCER_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
+                                          '.cwam',
+                                          'pgbouncer.template.yml')
 
 
 def json_dumps(dict, pretty=False):
@@ -486,6 +490,121 @@ def rds_remote_alarms(ctx, template, no_human, no_script):
                 click.echo(str(alarm))
         else:
             click.echo('None.')
+
+
+@main.group()
+@click.pass_context
+def pgbouncer(ctx):
+    pass
+
+
+@pgbouncer.command(name='list')
+@click.pass_context
+def pgbouncer_list(ctx):
+    """List PGBouncer servers."""
+    instances = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                          aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                          aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                          debug=ctx.obj['DEBUG']).list()
+    for instance in instances:
+        click.echo(instance)
+
+
+@pgbouncer.command(name='create')
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=PGBOUNCER_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+@click.option('--simulate', '-s', is_flag=True, default=False,
+              help='Simulate only. Do not take actions')
+def pgbouncer_create(ctx, template, simulate):
+    """Create alarms configured in --template file"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['pgbouncer']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+        only = template.get('only')
+        exclude = template.get('exclude')
+        sns = template.get('sns')
+        default = template.get('default')
+        alarms = template.get('alarms')
+    else:
+        ctx.fail('Conf file not found. Make sure --template is a valid path.')
+
+    if len(alarms) > 0:
+        pgbouncer = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                              aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                              debug=ctx.obj['DEBUG'])
+        pgbouncer.create(objects=parse_alarms(namespace, alarms),
+                         namespace=namespace,
+                         prefix=prefix,
+                         default=parse_default_alarm(namespace, default),
+                         only=parse_exclude_only(only),
+                         exclude=parse_exclude_only(exclude),
+                         sns=sns, simulate=simulate)
+    else:
+        click.echo('No alarms found.')
+
+
+@pgbouncer.command(name='local-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=PGBOUNCER_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+def pgbouncer_local_alarms(ctx, template):
+    namespace, alarms = parse_alarms_yml(ctx, 'pgbouncer', template)
+    for k, v in parse_alarms(namespace, alarms).iteritems():
+        click.echo(k)
+        for alarm in v:
+            click.echo(str(alarm))
+
+
+@pgbouncer.command(name='remote-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=PGBOUNCER_TMP_FILE,
+              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+@click.option('--no-human', '-h', is_flag=True, default=False,
+              help='Show only human alarms.')
+@click.option('--no-script', '-s', is_flag=True, default=False,
+              help='Show only script alarms.')
+def pgbouncer_remote_alarms(ctx, template, no_human, no_script):
+    """List alarms configured on AWS"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['pgbouncer']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+    else:
+        namespace = None
+        prefix = None
+
+    pgbouncer = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                          aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                          aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                          debug=ctx.obj['DEBUG'])
+    human_alarms, script_alarms = pgbouncer.remote_alarms(namespace=namespace,
+                                                          prefix=prefix)
+
+    if not no_human:
+        click.echo('Human alarms.')
+        if len(human_alarms) > 0:
+            for alarm in human_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+    if not no_script:
+        click.echo('Script alarms.')
+        if len(script_alarms) > 0:
+            for alarm in script_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
 
 @main.group()
 @click.pass_context
