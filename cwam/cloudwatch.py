@@ -69,7 +69,11 @@ class CloudWatch(Client, object):
             to_ignore_scripted = []
             to_ignore_humans = []
             all_alarms = objects.get('all') or []
-            alarms = objects.get(instance.name) or []
+            instance_name = instance.name
+            filtered_instance = filter(lambda i: i in instance.name, objects.keys())
+            if len(filtered_instance) > 0:
+                instance_name = max(filtered_instance, key=len)
+            alarms = objects.get(instance_name) or []
             alarms_names = [a.name for a in alarms]
             all_alarms = [obj for obj in all_alarms if obj.name not in alarms_names]
             alarms = alarms + all_alarms
