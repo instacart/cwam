@@ -21,6 +21,7 @@ class Alarm(object):
         self.ok_actions = info.get('OKActions')
         self.dimensions = info.get('Dimensions') or []
         self.description = info.get('AlarmDescription') or self.CREATED_BY_SCRIPT_STR
+        self.treat_missing_data = info.get('TreatMissingData') or 'missing'
 
     def is_valid(self):
         cond1 = self.name
@@ -53,7 +54,8 @@ class Alarm(object):
                 'AlarmActions': self.alarm_actions or [],
                 'OKActions': self.ok_actions or [],
                 'Dimensions': self.dimensions,
-                'AlarmDescription': self.description}
+                'AlarmDescription': self.description,
+                'TreatMissingData': self.treat_missing_data}
 
     def __str__(self):
         return ('{0} ('

@@ -111,6 +111,9 @@ class CloudWatch(Client, object):
                         alarm.ok_actions = [sns['default']]
                         alarm.alarm_actions = [sns['default']]
 
+                    if "5XX" in alarm.metric_name:
+                        alarm.treat_missing_data = 'notBreaching'
+
                     if is_human:
                         alarm.threshold = found1.threshold
                         alarm.description = found1.description
