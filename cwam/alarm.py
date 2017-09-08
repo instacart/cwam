@@ -39,7 +39,7 @@ class Alarm(object):
         return all([cond1, cond2])
 
     def dict(self):
-        return self.actions_dict() if self.is_human else self.all_dict()
+        return self.all_dict()
 
     def all_dict(self):
         return {'AlarmName': self.name,
@@ -54,10 +54,6 @@ class Alarm(object):
                 'OKActions': self.ok_actions or [],
                 'Dimensions': self.dimensions,
                 'AlarmDescription': self.description}
-
-    def actions_dict(self):
-        return {'AlarmActions': self.alarm_actions or [],
-                'OKActions': self.ok_actions or []}
 
     def __str__(self):
         return ('{0} ('

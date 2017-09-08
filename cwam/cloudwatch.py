@@ -111,6 +111,12 @@ class CloudWatch(Client, object):
                         alarm.ok_actions = [sns['default']]
                         alarm.alarm_actions = [sns['default']]
 
+                    if is_human:
+                        alarm.threshold = found1.threshold
+                        alarm.description = found1.description
+                        alarm.evaluation_periods = found1.evaluation_periods
+                        alarm.period = found1.period
+
                     if alarm.is_valid():
                         if is_human:
                             alarm.is_human = True
