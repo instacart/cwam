@@ -1,0 +1,63 @@
+# Metrics
+#
+# Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ak-metricscollected.html
+#
+# ReadProvisionedThroughputExceeded: The number of GetRecords calls throttled for the stream over the specified time period.
+#   Units: Count
+# WriteProvisionedThroughputExceeded: The number of records rejected due to throttling for the stream over the specified time period.
+#   Units: Count
+
+
+kinesis:
+  namespace: AWS/Kinesis
+  prefix: Kinesis
+  # only:
+  #   -
+  #     key: StreamName
+  #     regexp: staging
+  #   -
+  #     key: StreamName
+  #     regexp: production
+  # exclude:
+  #   -
+  #     key: StreamName
+  #     regexp: staging
+  #   -
+  #     key: StreamName
+  #     regexp: production
+  sns:
+    team1: arn:aws:sns:us-east-1:143926955520:team1
+    team2: arn:aws:sns:us-east-1:143926955520:team2
+    team3: arn:aws:sns:us-east-1:143926955520:team3
+  default:
+    sns:
+      AlarmActions:
+        - team1
+      OKActions:
+        - team1
+      InsufficientActions:
+        - team1
+  alarms:
+    all:
+      - ReadProvisionedThroughputExceeded:
+          MetricName: ReadProvisionedThroughputExceeded
+          Statistic: Average
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 5
+          Period: 60
+          Threshold: 10
+      - WriteProvisionedThroughputExceeded:
+          MetricName: WriteProvisionedThroughputExceeded
+          Statistic: Average
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 5
+          Period: 60
+          Threshold: 10
+    my_kinesis_identifier:
+      - ReadProvisionedThroughputExceeded:
+          MetricName: ReadProvisionedThroughputExceeded
+          Statistic: Average
+          ComparisonOperator: GreaterThanOrEqualToThreshold
+          EvaluationPeriods: 1
+          Period: 60
+          Threshold: 40
