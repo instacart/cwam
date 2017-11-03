@@ -90,7 +90,7 @@ class ElastiCache(CloudWatch, object):
 
     def create(self, objects, namespace=DEFAULT_NAMESPACE,
                prefix=ALARM_NAME_PREFIX, default=None, only=None,
-               exclude=None, sns={}, simulate=False):
+               exclude=None, sns={}, simulate=False, engine=None):
         if exclude is not None and only is not None:
             raise "Exlude and Only option are mutually exclusive."
 
@@ -99,22 +99,24 @@ class ElastiCache(CloudWatch, object):
         redis_instances = [i for i in instances if i.engine == 'redis']
         memcached_instances = [i for i in instances if i not in redis_instances]
 
-        super(ElastiCache, self).create(instances=redis_instances,
-                                         objects=objects,
-                                         namespace=namespace,
-                                         prefix='%s/redis' % prefix,
-                                         default=default,
-                                         only=only,
-                                         exclude=exclude,
-                                         sns=sns,
-                                         simulate=simulate)
+        if engine is None or engine == 'redis':
+            super(ElastiCache, self).create(instances=redis_instances,
+                                             objects=objects,
+                                             namespace=namespace,
+                                             prefix='%s/redis' % prefix,
+                                             default=default,
+                                             only=only,
+                                             exclude=exclude,
+                                             sns=sns,
+                                             simulate=simulate)
 
-        super(ElastiCache, self).create(instances=memcached_instances,
-                                         objects=objects,
-                                         namespace=namespace,
-                                         prefix='%s/memcached' % prefix,
-                                         default=default,
-                                         only=only,
-                                         exclude=exclude,
-                                         sns=sns,
-                                         simulate=simulate)
+        if engine is None or engine == 'memcached':
+            super(ElastiCache, self).create(instances=memcached_instances,
+                                             objects=objects,
+                                             namespace=namespace,
+                                             prefix='%s/memcached' % prefix,
+                                             default=default,
+                                             only=only,
+                                             exclude=exclude,
+                                             sns=sns,
+                                             simulate=simulate)
