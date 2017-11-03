@@ -647,6 +647,7 @@ def elastic_cache_create(ctx, template, simulate):
         sns = template.get('sns')
         default = template.get('default')
         alarms = template.get('alarms')
+        engine = template.get('engine')
     else:
         ctx.fail('Conf file not found. Make sure --template is a valid path.')
 
@@ -663,7 +664,8 @@ def elastic_cache_create(ctx, template, simulate):
                    only=parse_exclude_only(only),
                    exclude=parse_exclude_only(exclude),
                    sns=sns,
-                   simulate=simulate)
+                   simulate=simulate,
+                   engine=engine)
     else:
         click.echo('No alarms found.')
 
