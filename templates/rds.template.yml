@@ -113,14 +113,14 @@ rds:
           ComparisonOperator: GreaterThanOrEqualToThreshold
           EvaluationPeriods: 5
           Period: 60
-          Threshold: 4000
+          Threshold: 10000
       - HighWriteIOPS:
           MetricName: WriteIOPS
           Statistic: Average
           ComparisonOperator: GreaterThanOrEqualToThreshold
           EvaluationPeriods: 5
           Period: 60
-          Threshold: 5000
+          Threshold: 10000
       - HighReadLatency:
           MetricName: ReadLatency
           Statistic: Average
