@@ -90,7 +90,7 @@ class CloudWatch(Client, object):
 
                     alarm = Alarm(name=alarm.name, info=new_params)
 
-                    print('  - Checking alarm: {}').format(alarm.name)
+                    print('  - Checking alarm: {}'.format(alarm.name))
 
                     found1 = [a for a in human_alarms if a.name == alarm.name]
                     found2 = [a for a in scripts_alarms if a.name == alarm.name] # noqa E501
@@ -159,10 +159,10 @@ class CloudWatch(Client, object):
                             to_create.append(alarm)
                             if self.debug:
                                 print('    - Create action.')
-                                print('      - Params: {}').format(alarm.dict())  # noqa E501
+                                print('      - Params: {}'.format(alarm.dict()))  # noqa E501
                     else:
                         print('  - Invalid parameters.')
-                        print('    - Params: {}').format(alarm.dict())
+                        print('    - Params: {}'.format(alarm.dict()))
 
                     if self.debug:
                         print  # New line
@@ -170,11 +170,11 @@ class CloudWatch(Client, object):
                     if not simulate:
                         self.create_alarm(**alarm.dict())
 
-                print('\n  - Create total: {}').format(len(to_create))
-                print('  - Update total: (Scripted: {} | Humans: {})').format(len(to_update_scripted),  # noqa E501
-                                                                              len(to_update_humans))  # noqa E501
-                print('  - Ignore total: (Scripted: {} | Humans: {})').format(len(to_ignore_scripted),  # noqa E501
-                                                                              len(to_ignore_humans))  # noqa E501
+                print('\n  - Create total: {}'.format(len(to_create)))
+                print('  - Update total: (Scripted: {} | Humans: {})'.format(len(to_update_scripted),  # noqa E501
+                                                                             len(to_update_humans)))  # noqa E501
+                print('  - Ignore total: (Scripted: {} | Humans: {})'.format(len(to_ignore_scripted),  # noqa E501
+                                                                             len(to_ignore_humans)))  # noqa E501
 
                 to_create_total.append(to_create)
                 to_update_scripted_total.append(to_update_scripted)
@@ -186,8 +186,8 @@ class CloudWatch(Client, object):
             else:
                 print('  - None')
 
-        print('\nCreate total: {}').format(sum([len(a) for a in to_create_total]))  # noqa E501
-        print('Update total: (Scripted: {} | Humans: {})').format(sum([len(a) for a in to_update_scripted_total]),  # noqa E501
-                                                                  sum([len(a) for a in to_update_humans_total]))  # noqa E501
-        print('Ignore total: (Scripted: {} | Humans: {})').format(sum([len(a) for a in to_ignore_scripted_total]),  # noqa E501
-                                                                  sum([len(a) for a in to_ignore_humans_total]))  # noqa E501
+        print('\nCreate total: {}'.format(sum([len(a) for a in to_create_total])))  # noqa E501
+        print('Update total: (Scripted: {} | Humans: {})'.format(sum([len(a) for a in to_update_scripted_total]),  # noqa E501
+                                                                 sum([len(a) for a in to_update_humans_total])))  # noqa E501
+        print('Ignore total: (Scripted: {} | Humans: {})'.format(sum([len(a) for a in to_ignore_scripted_total]),  # noqa E501
+                                                                 sum([len(a) for a in to_ignore_humans_total])))  # noqa E501
