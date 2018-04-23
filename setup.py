@@ -12,7 +12,8 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'Click>=6.7',
     'boto3>=1.4.3',
-    'dictdiffer>=0.6.1'
+    'dictdiffer>=0.6.1',
+    'PyYAML>=3.12'
 ]
 
 test_requirements = [
