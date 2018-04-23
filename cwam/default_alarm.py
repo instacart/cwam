@@ -16,11 +16,11 @@ class DefaultAlarm(object):
                 'Dimensions': self.dimensions}
 
     def __str__(self):
-        return ('(AlarmActions: {1}, '
-                'EvaluationPeriods: {2}, '
-                'Period: {3}, '
-                'OKActions: {4}, '
-                'Dimensions: {5})').format(self.alarm_actions,
+        return ('(AlarmActions: {}, '
+                'EvaluationPeriods: {}, '
+                'Period: {}, '
+                'OKActions: {}, '
+                'Dimensions: {})').format(self.alarm_actions,
                                            self.evaluation_periods,
                                            self.period,
                                            self.ok_actions,

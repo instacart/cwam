@@ -58,20 +58,20 @@ class Alarm(object):
                 'TreatMissingData': self.treat_missing_data}
 
     def __str__(self):
-        return ('{0} ('
-                'Namespace: {1}, '
-                'MetricName: {2}, '
-                'Statistic: {3}, '
-                'ComparisonOperator: {4}, '
-                'EvaluationPeriods: {5}, '
-                'Period: {6}, '
-                'Threshold: {7}, '
-                'Created by script: {8}').format(self.name,
-                                                 self.namespace or None,
-                                                 self.metric_name,
-                                                 self.statistic,
-                                                 self.comparison_operator,
-                                                 self.evaluation_periods,
-                                                 self.period,
-                                                 self.threshold,
-                                                 self.is_created_by_script())
+        return ('{} ('
+                'Namespace: {}, '
+                'MetricName: {}, '
+                'Statistic: {}, '
+                'ComparisonOperator: {}, '
+                'EvaluationPeriods: {}, '
+                'Period: {}, '
+                'Threshold: {}, '
+                'Created by script: {}').format(self.name,
+                                                self.namespace or None,
+                                                self.metric_name,
+                                                self.statistic,
+                                                self.comparison_operator,
+                                                self.evaluation_periods,
+                                                self.period,
+                                                self.threshold,
+                                                self.is_created_by_script())

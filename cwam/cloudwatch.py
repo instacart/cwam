@@ -70,7 +70,7 @@ class CloudWatch(Client, object):
             to_ignore_humans = []
             all_alarms = objects.get('all') or []
             instance_name = instance.name
-            filtered_instance = filter(lambda i: i in instance.name, objects.keys())
+            filtered_instance = list(filter(lambda i: i in instance.name, objects.keys()))
             if len(filtered_instance) > 0:
                 instance_name = max(filtered_instance, key=len)
             alarms = objects.get(instance_name) or []
@@ -90,7 +90,7 @@ class CloudWatch(Client, object):
 
                     alarm = Alarm(name=alarm.name, info=new_params)
 
-                    print('  - Checking alarm: {0}').format(alarm.name)
+                    print('  - Checking alarm: {}').format(alarm.name)
 
                     found1 = [a for a in human_alarms if a.name == alarm.name]
                     found2 = [a for a in scripts_alarms if a.name == alarm.name]
@@ -159,10 +159,10 @@ class CloudWatch(Client, object):
                             to_create.append(alarm)
                             if self.debug:
                                 print('    - Create action.')
-                                print('      - Params: {0}').format(alarm.dict())
+                                print('      - Params: {}').format(alarm.dict())
                     else:
                         print('  - Invalid parameters.')
-                        print('    - Params: {0}').format(alarm.dict())
+                        print('    - Params: {}').format(alarm.dict())
 
                     if self.debug:
                         print # New line
@@ -170,10 +170,10 @@ class CloudWatch(Client, object):
                     if not simulate:
                         self.create_alarm(**alarm.dict())
 
-                print('\n  - Create total: {0}').format(len(to_create))
-                print('  - Update total: (Scripted: {0} | Humans: {1})').format(len(to_update_scripted),
+                print('\n  - Create total: {}').format(len(to_create))
+                print('  - Update total: (Scripted: {} | Humans: {})').format(len(to_update_scripted),
                                                                                  len(to_update_humans))
-                print('  - Ignore total: (Scripted: {0} | Humans: {1})').format(len(to_ignore_scripted),
+                print('  - Ignore total: (Scripted: {} | Humans: {})').format(len(to_ignore_scripted),
                                                                                  len(to_ignore_humans))
 
                 to_create_total.append(to_create)
@@ -186,8 +186,8 @@ class CloudWatch(Client, object):
             else:
                 print('  - None')
 
-        print('\nCreate total: {0}').format(sum([len(a) for a in to_create_total]))
-        print('Update total: (Scripted: {0} | Humans: {1})').format(sum([len(a) for a in to_update_scripted_total]),
-                                                                     sum([len(a) for a in to_update_humans_total]))
-        print('Ignore total: (Scripted: {0} | Humans: {1})').format(sum([len(a) for a in to_ignore_scripted_total]),
-                                                                     sum([len(a) for a in to_ignore_humans_total]))
+        print('\nCreate total: {}').format(sum([len(a) for a in to_create_total]))
+        print('Update total: (Scripted: {} | Humans: {})').format(sum([len(a) for a in to_update_scripted_total]),
+                                                                  sum([len(a) for a in to_update_humans_total]))
+        print('Ignore total: (Scripted: {} | Humans: {})').format(sum([len(a) for a in to_ignore_scripted_total]),
+                                                                  sum([len(a) for a in to_ignore_humans_total]))

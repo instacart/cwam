@@ -27,27 +27,27 @@ except NameError:
 
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
-ALB_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                    '.cwam',
-                                    'alb.template.yml')
-ELB_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                    '.cwam',
-                                    'elb.template.yml')
-RDS_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                    '.cwam',
-                                    'rds.template.yml')
-KINESIS_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                        '.cwam',
-                                        'kinesis.template.yml')
-ELASTIC_CACHE_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                              '.cwam',
-                                              'elastic_cache.template.yml')
-EC2_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                    '.cwam',
-                                    'ec2.template.yml')
-PGBOUNCER_TMP_FILE = "{0}/{1}/{2}".format(expanduser("~"),
-                                          '.cwam',
-                                          'pgbouncer.template.yml')
+ALB_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                 '.cwam',
+                                 'alb.template.yml')
+ELB_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                 '.cwam',
+                                 'elb.template.yml')
+RDS_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                 '.cwam',
+                                 'rds.template.yml')
+KINESIS_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                     '.cwam',
+                                     'kinesis.template.yml')
+ELASTIC_CACHE_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                           '.cwam',
+                                           'elastic_cache.template.yml')
+EC2_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                 '.cwam',
+                                 'ec2.template.yml')
+PGBOUNCER_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                       '.cwam',
+                                       'pgbouncer.template.yml')
 
 
 def json_dumps(dict, pretty=False):
@@ -174,7 +174,7 @@ def alb_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ALB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ALB_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def alb_create(ctx, template, simulate):
@@ -213,7 +213,7 @@ def alb_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ALB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ALB_TMP_FILE))
 def alb_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'alb', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -226,7 +226,7 @@ def alb_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ALB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ALB_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -289,7 +289,7 @@ def elb_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELB_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def elb_create(ctx, template, simulate):
@@ -328,7 +328,7 @@ def elb_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELB_TMP_FILE))
 def elb_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'elb', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -341,7 +341,7 @@ def elb_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELB_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELB_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELB_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -404,7 +404,7 @@ def rds_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=RDS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(RDS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(RDS_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def rds_create(ctx, template, simulate):
@@ -443,7 +443,7 @@ def rds_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=RDS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(RDS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(RDS_TMP_FILE))
 def rds_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'rds', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -456,7 +456,7 @@ def rds_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=RDS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(RDS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(RDS_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -519,7 +519,7 @@ def pgbouncer_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def pgbouncer_create(ctx, template, simulate):
@@ -557,7 +557,7 @@ def pgbouncer_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
 def pgbouncer_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'pgbouncer', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -570,7 +570,7 @@ def pgbouncer_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -633,7 +633,7 @@ def elastic_cache_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def elastic_cache_create(ctx, template, simulate):
@@ -674,7 +674,7 @@ def elastic_cache_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
 def elastic_cache_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'elastic_caches', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -687,7 +687,7 @@ def elastic_cache_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -749,7 +749,7 @@ def ec2_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=EC2_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(EC2_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def ec2_create(ctx, template, simulate):
@@ -788,7 +788,7 @@ def ec2_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=EC2_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(EC2_TMP_FILE))
 def ec2_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'ec2', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -801,7 +801,7 @@ def ec2_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=EC2_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(EC2_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -864,7 +864,7 @@ def kinesis_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def kinesis_create(ctx, template, simulate):
@@ -903,7 +903,7 @@ def kinesis_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
 def kinesis_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'kinesis', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -916,7 +916,7 @@ def kinesis_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {0}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,

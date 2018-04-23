@@ -75,14 +75,14 @@ def resolved_dict(name, instance, original, default, namespace=None,
             if not default_all_params[k]:
                 del default_all_params[k]
 
-    filtered_instance = filter(lambda i: i in instance.name, default.keys())
+    filtered_instance = list(filter(lambda i: i in instance.name, default.keys()))
     instance_name = instance.name
     if len(filtered_instance) > 0:
         instance_name = max(filtered_instance, key=len)
 
     if default.get(instance_name):
         default_instance_params = default.get(instance_name).dict()
-        for k in default_instance_params.keys():
+        for k in list(default_instance_params):
             if not default_instance_params[k]:
                 del default_instance_params[k]
 
@@ -97,7 +97,7 @@ def resolved_dict(name, instance, original, default, namespace=None,
     params['InsufficientDataActions'] = extract_alarm_actions(default, params, sns, 'InsufficientDataActions')
 
     if prefix is not None:
-        params['AlarmName'] = '{0}/{1}/{2}'.format(prefix, instance.name, name)
+        params['AlarmName'] = '{}/{}/{}'.format(prefix, instance.name, name)
 
     if params.get('Dimensions') and len(params.get('Dimensions')) > 0:
         for dim in params['Dimensions']:
