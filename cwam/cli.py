@@ -77,7 +77,7 @@ def parse_exclude_only(infos):
 def parse_default_alarm(namespace, objects):
     alarms = {}
     if objects:
-        for k, v in objects.iteritems():
+        for k, v in objects.items():
             alarms[k] = DefaultAlarm(namespace=namespace, info=v)
     alarms['sns'] = objects.get('sns')
     return alarms
@@ -85,7 +85,7 @@ def parse_default_alarm(namespace, objects):
 
 def parse_alarms(namespace, objects):
     alarms = {}
-    for k, v in objects.iteritems():
+    for k, v in objects.items():
         alarms_obj = []
         for alarm in v:
             name = next(iter(alarm))
@@ -216,7 +216,7 @@ def alb_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(ALB_TMP_FILE))
 def alb_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'alb', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -331,7 +331,7 @@ def elb_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(ELB_TMP_FILE))
 def elb_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'elb', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -446,7 +446,7 @@ def rds_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(RDS_TMP_FILE))
 def rds_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'rds', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -560,7 +560,7 @@ def pgbouncer_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(PGBOUNCER_TMP_FILE))
 def pgbouncer_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'pgbouncer', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -677,7 +677,7 @@ def elastic_cache_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(ELASTIC_CACHE_TMP_FILE))
 def elastic_cache_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'elastic_caches', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -791,7 +791,7 @@ def ec2_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(EC2_TMP_FILE))
 def ec2_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'ec2', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
@@ -906,7 +906,7 @@ def kinesis_create(ctx, template, simulate):
               help='Path to template file. Default: {0}.'.format(KINESIS_TMP_FILE))
 def kinesis_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'kinesis', template)
-    for k, v in parse_alarms(namespace, alarms).iteritems():
+    for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
