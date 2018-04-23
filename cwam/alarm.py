@@ -20,7 +20,7 @@ class Alarm(object):
         self.alarm_actions = info.get('AlarmActions')
         self.ok_actions = info.get('OKActions')
         self.dimensions = info.get('Dimensions') or []
-        self.description = info.get('AlarmDescription') or self.CREATED_BY_SCRIPT_STR
+        self.description = info.get('AlarmDescription') or self.CREATED_BY_SCRIPT_STR  # noqa E501
         self.treat_missing_data = info.get('TreatMissingData') or 'missing'
 
     def is_valid(self):
@@ -31,7 +31,7 @@ class Alarm(object):
         cond5 = self.statistic
         cond6 = self.dimensions
         cond7 = self.description
-        cond8 = ((self.alarm_actions and len(self.alarm_actions)) > 0 or (self.ok_actions and len(self.ok_actions) > 0))
+        cond8 = ((self.alarm_actions and len(self.alarm_actions)) > 0 or (self.ok_actions and len(self.ok_actions) > 0))  # noqa E501
         return all([cond1, cond2, cond3, cond4, cond5, cond6, cond7, cond8])
 
     def is_created_by_script(self):

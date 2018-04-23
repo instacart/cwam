@@ -30,8 +30,8 @@ class ALB(CloudWatch, object):
     DEFAULT_NAMESPACE = 'AWS/ApplicationELB'
     ALARM_NAME_PREFIX = 'ALB'
 
-    def __init__(self, aws_access_key_id = None, aws_access_secret_key = None,
-                 aws_session_token = None, aws_default_region = None, debug=None):
+    def __init__(self, aws_access_key_id=None, aws_access_secret_key=None,
+                 aws_session_token=None, aws_default_region=None, debug=None):
         super(ALB, self).__init__(aws_access_key_id=aws_access_key_id,
                                   aws_access_secret_key=aws_access_secret_key,
                                   aws_session_token=aws_session_token,

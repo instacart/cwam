@@ -28,10 +28,10 @@ class Kinesis(CloudWatch, object):
     DEFAULT_NAMESPACE = 'AWS/Kinesis'
     ALARM_NAME_PREFIX = 'Kinesis'
 
-    def __init__(self, aws_access_key_id = None, aws_access_secret_key = None,
-                 aws_session_token = None, aws_default_region = None, debug=None):
+    def __init__(self, aws_access_key_id=None, aws_access_secret_key=None,
+                 aws_session_token=None, aws_default_region=None, debug=None):
         super(Kinesis, self).__init__(aws_access_key_id=aws_access_key_id,
-                                      aws_access_secret_key=aws_access_secret_key,
+                                      aws_access_secret_key=aws_access_secret_key,  # noqa E501
                                       aws_session_token=aws_session_token,
                                       aws_default_region=aws_default_region,
                                       debug=debug)
@@ -39,7 +39,7 @@ class Kinesis(CloudWatch, object):
 
     def _list_streams(self):
         response = self.client.list_streams(Limit=1000)
-        return [KinesisInstance(self.client, name) for name in response['StreamNames']]
+        return [KinesisInstance(self.client, name) for name in response['StreamNames']]  # noqa E501
 
     def list(self):
         return self._list_streams()

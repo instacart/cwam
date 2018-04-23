@@ -151,6 +151,7 @@ def main(ctx, debug, pretty, aws_access_key_id, aws_access_secret_key,
     else:
         ctx.obj['AWS_DEFAULT_REGION'] = None
 
+
 @main.group()
 @click.pass_context
 def alb(ctx):
@@ -507,7 +508,7 @@ def pgbouncer(ctx):
 def pgbouncer_list(ctx):
     """List PGBouncer servers."""
     instances = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                           aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                           aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                           debug=ctx.obj['DEBUG']).list()
@@ -519,7 +520,7 @@ def pgbouncer_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))  # noqa E501
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def pgbouncer_create(ctx, template, simulate):
@@ -538,7 +539,7 @@ def pgbouncer_create(ctx, template, simulate):
 
     if len(alarms) > 0:
         pgbouncer = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                               aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                               debug=ctx.obj['DEBUG'])
@@ -557,7 +558,7 @@ def pgbouncer_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))  # noqa E501
 def pgbouncer_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'pgbouncer', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -570,7 +571,7 @@ def pgbouncer_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=PGBOUNCER_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(PGBOUNCER_TMP_FILE))  # noqa E501
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -586,7 +587,7 @@ def pgbouncer_remote_alarms(ctx, template, no_human, no_script):
         prefix = None
 
     pgbouncer = PGBouncer(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                           aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                           aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                           debug=ctx.obj['DEBUG'])
@@ -621,10 +622,10 @@ def elastic_cache(ctx):
 def elastic_cache_list(ctx):
     """List ElastiCache clusters."""
     instances = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                    aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
-                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
-                    aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
-                    debug=ctx.obj['DEBUG']).list()
+                            aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
+                            aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                            aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                            debug=ctx.obj['DEBUG']).list()
     for instance in instances:
         click.echo(instance)
 
@@ -633,7 +634,7 @@ def elastic_cache_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def elastic_cache_create(ctx, template, simulate):
@@ -652,20 +653,20 @@ def elastic_cache_create(ctx, template, simulate):
         ctx.fail('Conf file not found. Make sure --template is a valid path.')
 
     if len(alarms) > 0:
-        elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                  aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
-                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
-                  aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
-                  debug=ctx.obj['DEBUG'])
+        elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
+                                    aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
+                                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],  # noqa E501
+                                    aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],  # noqa E501
+                                    debug=ctx.obj['DEBUG'])
         elastic_cache.create(objects=parse_alarms(namespace, alarms),
-                   namespace=namespace,
-                   prefix=prefix,
-                   default=parse_default_alarm(namespace, default),
-                   only=parse_exclude_only(only),
-                   exclude=parse_exclude_only(exclude),
-                   sns=sns,
-                   simulate=simulate,
-                   engine=engine)
+                             namespace=namespace,
+                             prefix=prefix,
+                             default=parse_default_alarm(namespace, default),
+                             only=parse_exclude_only(only),
+                             exclude=parse_exclude_only(exclude),
+                             sns=sns,
+                             simulate=simulate,
+                             engine=engine)
     else:
         click.echo('No alarms found.')
 
@@ -674,7 +675,7 @@ def elastic_cache_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
 def elastic_cache_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'elastic_caches', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -687,7 +688,7 @@ def elastic_cache_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -702,13 +703,13 @@ def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
         namespace = None
         prefix = None
 
-    elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
-              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
-              aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
-              debug=ctx.obj['DEBUG'])
-    human_alarms, script_alarms = elastic_cache.remote_alarms(namespace=namespace,
-                                                    prefix=prefix)
+    elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
+                                aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
+                                aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],  # noqa E501
+                                aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],  # noqa E501
+                                debug=ctx.obj['DEBUG'])
+    human_alarms, script_alarms = elastic_cache.remote_alarms(namespace=namespace,  # noqa E501
+                                                              prefix=prefix)
 
     if not no_human:
         click.echo('Human alarms.')
@@ -725,6 +726,7 @@ def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
                 click.echo(str(alarm))
         else:
             click.echo('None.')
+
 
 @main.group()
 @click.pass_context
@@ -852,10 +854,10 @@ def kinesis(ctx):
 def kinesis_list(ctx):
     """List Kinesis streams."""
     streams = Kinesis(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                        aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
-                        aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
-                        aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
-                        debug=ctx.obj['DEBUG']).list()
+                      aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                      aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                      aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                      debug=ctx.obj['DEBUG']).list()
     for streams in streams:
         click.echo(streams)
 
@@ -864,7 +866,7 @@ def kinesis_list(ctx):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))  # noqa E501
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
 def kinesis_create(ctx, template, simulate):
@@ -883,7 +885,7 @@ def kinesis_create(ctx, template, simulate):
 
     if len(alarms) > 0:
         kinesis = Kinesis(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
-                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                          aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                           aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
                           aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
                           debug=ctx.obj['DEBUG'])
@@ -903,7 +905,7 @@ def kinesis_create(ctx, template, simulate):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))  # noqa E501
 def kinesis_local_alarms(ctx, template):
     namespace, alarms = parse_alarms_yml(ctx, 'kinesis', template)
     for k, v in parse_alarms(namespace, alarms).items():
@@ -916,7 +918,7 @@ def kinesis_local_alarms(ctx, template):
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=KINESIS_TMP_FILE,
-              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))
+              help='Path to template file. Default: {}.'.format(KINESIS_TMP_FILE))  # noqa E501
 @click.option('--no-human', '-h', is_flag=True, default=False,
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
@@ -954,6 +956,7 @@ def kinesis_remote_alarms(ctx, template, no_human, no_script):
                 click.echo(str(alarm))
         else:
             click.echo('None.')
+
 
 if __name__ == "__main__":
     main()

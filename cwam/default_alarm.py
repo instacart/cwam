@@ -21,7 +21,7 @@ class DefaultAlarm(object):
                 'Period: {}, '
                 'OKActions: {}, '
                 'Dimensions: {})').format(self.alarm_actions,
-                                           self.evaluation_periods,
-                                           self.period,
-                                           self.ok_actions,
-                                           self.dimensions)
+                                          self.evaluation_periods,
+                                          self.period,
+                                          self.ok_actions,
+                                          self.dimensions)

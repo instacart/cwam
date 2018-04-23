@@ -31,7 +31,7 @@ class ElastiCacheInstance:
         self.type = info.get('CacheNodeType')
 
     def __str__(self):
-        return '(ElastiCacheInstance) Name: %s, Engine: %s, Type: %s' % (self.name, self.engine, self.type)
+        return '(ElastiCacheInstance) Name: %s, Engine: %s, Type: %s' % (self.name, self.engine, self.type) # noqa E501
 
     def default_dimension_name(self):
         return 'CacheClusterId'
@@ -61,13 +61,13 @@ class ElastiCache(CloudWatch, object):
     DEFAULT_NAMESPACE = 'AWS/ElastiCache'
     ALARM_NAME_PREFIX = 'Cache'
 
-    def __init__(self, aws_access_key_id = None, aws_access_secret_key = None,
-                 aws_session_token = None, aws_default_region = None, debug=None):
+    def __init__(self, aws_access_key_id=None, aws_access_secret_key=None,
+                 aws_session_token=None, aws_default_region=None, debug=None):
         super(ElastiCache, self).__init__(aws_access_key_id=aws_access_key_id,
-                                           aws_access_secret_key=aws_access_secret_key,
-                                           aws_session_token=aws_session_token,
-                                           aws_default_region=aws_default_region,
-                                           debug=debug)
+                                          aws_access_secret_key=aws_access_secret_key, # noqa E501
+                                          aws_session_token=aws_session_token,
+                                          aws_default_region=aws_default_region, # noqa E501
+                                          debug=debug)
         self.client = self.session.client('elasticache')
 
     def _describe_elastic_caches(self):
@@ -86,7 +86,7 @@ class ElastiCache(CloudWatch, object):
         namespace = namespace or ElastiCache.DEFAULT_NAMESPACE
         prefix = prefix or ElastiCache.ALARM_NAME_PREFIX
         return super(ElastiCache, self).remote_alarms(namespace=namespace,
-                                                       prefix=prefix)
+                                                      prefix=prefix)
 
     def create(self, objects, namespace=DEFAULT_NAMESPACE,
                prefix=ALARM_NAME_PREFIX, default=None, only=None,
@@ -97,26 +97,26 @@ class ElastiCache(CloudWatch, object):
         instances = self._describe_elastic_caches()
 
         redis_instances = [i for i in instances if i.engine == 'redis']
-        memcached_instances = [i for i in instances if i not in redis_instances]
+        memcached_instances = [i for i in instances if i not in redis_instances] # noqa E501
 
         if engine is None or engine == 'redis':
             super(ElastiCache, self).create(instances=redis_instances,
-                                             objects=objects,
-                                             namespace=namespace,
-                                             prefix='%s/redis' % prefix,
-                                             default=default,
-                                             only=only,
-                                             exclude=exclude,
-                                             sns=sns,
-                                             simulate=simulate)
+                                            objects=objects,
+                                            namespace=namespace,
+                                            prefix='%s/redis' % prefix,
+                                            default=default,
+                                            only=only,
+                                            exclude=exclude,
+                                            sns=sns,
+                                            simulate=simulate)
 
         if engine is None or engine == 'memcached':
             super(ElastiCache, self).create(instances=memcached_instances,
-                                             objects=objects,
-                                             namespace=namespace,
-                                             prefix='%s/memcached' % prefix,
-                                             default=default,
-                                             only=only,
-                                             exclude=exclude,
-                                             sns=sns,
-                                             simulate=simulate)
+                                            objects=objects,
+                                            namespace=namespace,
+                                            prefix='%s/memcached' % prefix,
+                                            default=default,
+                                            only=only,
+                                            exclude=exclude,
+                                            sns=sns,
+                                            simulate=simulate)

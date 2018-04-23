@@ -32,7 +32,7 @@ class PGBouncer(CloudWatch, object):
     def __init__(self, aws_access_key_id=None, aws_access_secret_key=None,
                  aws_session_token=None, aws_default_region=None, debug=None):
         super(PGBouncer, self).__init__(aws_access_key_id=aws_access_key_id,
-                                        aws_access_secret_key=aws_access_secret_key,
+                                        aws_access_secret_key=aws_access_secret_key, # noqa E501
                                         aws_session_token=aws_session_token,
                                         aws_default_region=aws_default_region,
                                         debug=debug)

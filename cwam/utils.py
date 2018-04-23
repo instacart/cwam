@@ -75,7 +75,7 @@ def resolved_dict(name, instance, original, default, namespace=None,
             if not default_all_params[k]:
                 del default_all_params[k]
 
-    filtered_instance = list(filter(lambda i: i in instance.name, default.keys()))
+    filtered_instance = list(filter(lambda i: i in instance.name, default.keys()))  # noqa E501
     instance_name = instance.name
     if len(filtered_instance) > 0:
         instance_name = max(filtered_instance, key=len)
@@ -92,9 +92,9 @@ def resolved_dict(name, instance, original, default, namespace=None,
 
     params = dict(original, **default_params)
 
-    params['AlarmActions'] = extract_alarm_actions(default, params, sns, 'AlarmActions')
-    params['OKActions'] = extract_alarm_actions(default, params, sns, 'OKActions')
-    params['InsufficientDataActions'] = extract_alarm_actions(default, params, sns, 'InsufficientDataActions')
+    params['AlarmActions'] = extract_alarm_actions(default, params, sns, 'AlarmActions')  # noqa E501
+    params['OKActions'] = extract_alarm_actions(default, params, sns, 'OKActions')  # noqa E501
+    params['InsufficientDataActions'] = extract_alarm_actions(default, params, sns, 'InsufficientDataActions')  # noqa E501
 
     if prefix is not None:
         params['AlarmName'] = '{}/{}/{}'.format(prefix, instance.name, name)
@@ -108,7 +108,7 @@ def resolved_dict(name, instance, original, default, namespace=None,
         params['Dimensions'] = instance.default_dimensions()
 
     for attr in params:
-        method_name = '%s_%s_modifier' % (to_underscore(params['MetricName']), attr.lower())
+        method_name = '%s_%s_modifier' % (to_underscore(params['MetricName']), attr.lower())  # noqa E501
         if(hasattr(instance, method_name)):
             params[attr] = getattr(instance, method_name)(params[attr])
 

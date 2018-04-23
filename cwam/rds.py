@@ -30,8 +30,8 @@ class RDS(CloudWatch, object):
     DEFAULT_NAMESPACE = 'AWS/RDS'
     ALARM_NAME_PREFIX = 'RDS'
 
-    def __init__(self, aws_access_key_id = None, aws_access_secret_key = None,
-                 aws_session_token = None, aws_default_region = None, debug=None):
+    def __init__(self, aws_access_key_id=None, aws_access_secret_key=None,
+                 aws_session_token=None, aws_default_region=None, debug=None):
         super(RDS, self).__init__(aws_access_key_id=aws_access_key_id,
                                   aws_access_secret_key=aws_access_secret_key,
                                   aws_session_token=aws_session_token,
