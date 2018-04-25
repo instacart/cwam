@@ -9,14 +9,10 @@ Tests for `cwam` module.
 """
 
 
-import sys
 import unittest
-from contextlib import contextmanager
 from click.testing import CliRunner
 
-from cwam import cwam
 from cwam import cli
-
 
 
 class TestCwam(unittest.TestCase):
