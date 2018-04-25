@@ -21,6 +21,12 @@ class ElastiCacheInstance:
         "cache.r3.2xlarge": 8,
         "cache.r3.4xlarge": 16,
         "cache.r3.8xlarge": 32,
+        "cache.r4.large": 2,
+        "cache.r4.xlarge": 4,
+        "cache.r4.2xlarge": 8,
+        "cache.r4.4xlarge": 16,
+        "cache.r4.8xlarge": 32,
+        "cache.r4.16xlarge": 64,
     }
 
     def __init__(self, client, info):
