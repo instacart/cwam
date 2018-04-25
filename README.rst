@@ -21,8 +21,8 @@ Requirements
 - Python 2.6, 2.7, 3.3, 3.4, or 3.5
 - An AWS account
 
-CLI
----
+CWAM
+------------
 
 CWAM is currently supporting:
 
@@ -30,6 +30,16 @@ CWAM is currently supporting:
 - RDS
 - Kinesis
 - ElasticCache
+
+Examples templates are available:
+
+https://github.com/instacart/cwam/blob/master/templates/alb.template.yml
+https://github.com/instacart/cwam/blob/master/templates/rds.template.yml
+https://github.com/instacart/cwam/blob/master/templates/kinesis.template.yml
+https://github.com/instacart/cwam/blob/master/templates/elastic_cache.template.yml
+
+CLI
+---
 
 CLI Authentication
 ~~~~~~~~~~~~~~~~~~
@@ -42,7 +52,7 @@ Via environment variables:
     $ export AWS_SECRET_ACCESS_KEY="aws_access_secret_key"
     $ export AWS_SESSION_TOKEN="aws_session_token"
     $ export AWS_DEFAULT_REGION="us-east-1"
-    $ cwam elb list
+    $ cwam --conf ~/.cwam/conf.yml elb create -t /path/to/template.yml
 
 Via (--conf/-c) option:
 
@@ -58,7 +68,7 @@ Edit ~/.cwam/conf.yml
 
 .. code:: bash
 
-    $ cwam --conf ~/.cwam/conf.yml elb create
+    $ cwam --conf ~/.cwam/conf.yml elb create -t /path/to/template.yml
 
 Via CLI options:
 
@@ -67,7 +77,7 @@ Via CLI options:
     $ cwam ----aws-access-key-id aws_access_key_id \
     --aws-access-secret-key aws_access_secret_key \
     --aws-session-token aws_session_token \
-    --aws_default_region us-east-1 elb create
+    --aws_default_region us-east-1 elb create -t /path/to/template.yml
 
 Subcommands
 ~~~~~~~~~~~
