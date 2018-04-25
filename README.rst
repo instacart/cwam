@@ -48,14 +48,15 @@ Via (--conf/-c) option:
 Edit ~/.cwam/conf.yml
 
 .. code:: yaml
-  aws:
-    aws_access_key_id: aws_access_key_id
-    aws_access_secret_key: aws_access_secret_key
-    aws_default_region: aws_default_region
+
+    aws:
+      aws_access_key_id: aws_access_key_id
+      aws_access_secret_key: aws_access_secret_key
+      aws_default_region: aws_default_region
 
 .. code:: bash
 
-     cwam --conf /path/to/config elb create
+    $ cwam --conf ~/.cwam/conf.yml elb create
 
 Via CLI options:
 
