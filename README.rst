@@ -27,7 +27,8 @@ CWAM
 Resources supported
 ~~~~~~~~~~~~~~~~~~~
 
-- ELB (Application Load Balancer)
+- ELB
+- ALB
 - RDS
 - Kinesis
 - ElasticCache
@@ -94,14 +95,17 @@ Subcommands
       -k, --aws-access-key-id TEXT    AWS Access Key ID.
       -s, --aws-access-secret-key TEXT
                                       AWS Secret Access Key.
+      -t, --aws-session-token TEXT    AWS Secret Access Key.
       -r, --aws_default_region TEXT   AWS Region.
-      -c, --conf TEXT                 Path to config
-                                      (~/.cwam/conf.yml).
       --version                       Show the version and exit.
       -h, --help                      Show this message and exit.
 
     Commands:
+      alb
+      elastic_cache
       elb
+      kinesis
+      rds
 
 Documentation
 =============
