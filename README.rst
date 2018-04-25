@@ -38,7 +38,7 @@ Templates
 https://github.com/instacart/cwam/blob/master/templates/alb.template.yml
 https://github.com/instacart/cwam/blob/master/templates/rds.template.yml
 https://github.com/instacart/cwam/blob/master/templates/kinesis.template.yml
-https://github.com/instacart/cwam/blob/master/templates/elastic_cache .template.yml
+https://github.com/instacart/cwam/blob/master/templates/elastic_cache.template.yml
 
 CLI
 ---
