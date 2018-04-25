@@ -22,7 +22,7 @@ test_requirements = [
 
 setup(
     name='cwam',
-    version='0.1.0',
+    version='1.0.0',
     description="Easy way to create default CloudWatch Alarms.",
     long_description=readme + '\n\n' + history,
     author="Quentin Rousseau",
@@ -44,7 +44,7 @@ setup(
     zip_safe=False,
     keywords='cloudwatch',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -54,6 +54,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development',

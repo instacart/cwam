@@ -19,10 +19,17 @@ Requirements
 ------------
 
 - Python 2.6, 2.7, 3.3, 3.4, or 3.5
-- A AWS account
+- An AWS account
 
 CLI
 ---
+
+CWAM is actually supporting:
+
+- ELB (Application Load Balancer)
+- RDS
+- Kinesis
+- ElasticCache
 
 CLI Authentication
 ~~~~~~~~~~~~~~~~~~
@@ -36,7 +43,7 @@ Via environment variables:
     $ export AWS_DEFAULT_REGION="us-east-1"
     $ cwam elb list
 
-Via implicit ~/cwam/conf.yml:
+Via (--conf/-c) option:
 
 Edit ~/.cwam/conf.yml
 
@@ -48,15 +55,9 @@ Edit ~/.cwam/conf.yml
 
 .. code:: bash
 
-    $ cwam elb create
+     cwam --conf /path/to/config elb create
 
-Via (--conf/-c) option:
-
-.. code:: bash
-
-    $ cwam --conf /path/to/config elb create
-
-Via option:
+Via CLI options:
 
 .. code:: bash
 
@@ -86,50 +87,6 @@ Subcommands
     Commands:
       elb
 
-ELB
-~~~~~~~~
-
-.. code:: plain
-
-    Usage: cwam elb [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      -h, --help  Show this message and exit.
-
-    Commands:
-      create         Create alarms configured in --conf file
-      list           List ELB.
-      local-alarms   List alarms configured in --conf file
-      remote-alarms  List alarms configured on AWS
-
-Examples:
-
-.. code:: bash
-
-    $ cwam elb create
-
-RDS
-~~~~~~~~
-
-.. code:: plain
-
-    Usage: cwam rds [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      -h, --help  Show this message and exit.
-
-    Commands:
-      create         Create alarms configured in --conf file
-      list           List RDS.
-      local-alarms   List alarms configured in --conf file
-      remote-alarms  List alarms configured on AWS
-
-Examples:
-
-.. code:: bash
-
-    $ cwam rds create
-
 Documentation
 =============
 
@@ -150,7 +107,7 @@ License
 
 .. code:: plain
 
-    Copyright (c) 2017 Instacart <quentin@instacart.com>
+    Copyright (c) 2018 Instacart <quentin@instacart.com>
 
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -174,7 +131,7 @@ License
     OTHER DEALINGS IN THE SOFTWARE.
 
 .. _changelog: https://github.com/instacart/cwam/blob/master/HISTORY.rst
-.. _Quentin Rousseau: https://github.com/instacart
+.. _Quentin Rousseau: https://github.com/kwent
 
 .. |pypi| image:: https://img.shields.io/pypi/v/cwam.svg
    :target: https://pypi.python.org/pypi/cwam
