@@ -24,7 +24,7 @@ Requirements
 CLI
 ---
 
-CWAM is actually supporting:
+CWAM is currently supporting:
 
 - ELB (Application Load Balancer)
 - RDS
