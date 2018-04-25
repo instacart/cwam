@@ -40,6 +40,7 @@ Via environment variables:
 
     $ export AWS_ACCESS_KEY_ID="aws_access_key_id"
     $ export AWS_SECRET_ACCESS_KEY="aws_access_secret_key"
+    $ export AWS_SESSION_TOKEN="aws_session_token"
     $ export AWS_DEFAULT_REGION="us-east-1"
     $ cwam elb list
 
@@ -52,6 +53,7 @@ Edit ~/.cwam/conf.yml
     aws:
       aws_access_key_id: aws_access_key_id
       aws_access_secret_key: aws_access_secret_key
+      aws_session_token: aws_session_token
       aws_default_region: aws_default_region
 
 .. code:: bash
@@ -64,6 +66,7 @@ Via CLI options:
 
     $ cwam ----aws-access-key-id aws_access_key_id \
     --aws-access-secret-key aws_access_secret_key \
+    --aws-session-token aws_session_token \
     --aws_default_region us-east-1 elb create
 
 Subcommands
