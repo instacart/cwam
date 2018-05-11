@@ -35,8 +35,8 @@ Resources supported
 - Kinesis
 - ElasticCache
 
-Templates
-~~~~~~~~~
+Templates samples
+~~~~~~~~~~~~~~~~~
 
 - https://github.com/instacart/cwam/blob/master/templates/alb.template.yml
 - https://github.com/instacart/cwam/blob/master/templates/rds.template.yml
