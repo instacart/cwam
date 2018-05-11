@@ -6,6 +6,8 @@ CloudWatch Alarms Manager
 
 Easy way to create default CloudWatch Alarms.
 
+**CWAM** is creating default alarms associated with default metrics for different kind of AWS resources.
+
 Installation
 ------------
 
