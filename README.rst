@@ -43,6 +43,13 @@ Templates
 - https://github.com/instacart/cwam/blob/master/templates/kinesis.template.yml
 - https://github.com/instacart/cwam/blob/master/templates/elastic_cache.template.yml
 
+Human interaction
+~~~~~~~~~~~~~~~~~
+
+At any time, a human can modify an alarm value created by **CWAM**.
+To make sure **CWAM** is not overriding that value again, the alarm description
+field needs to be updated with a string different from ``Created by Script``.
+
 CLI
 ---
 
