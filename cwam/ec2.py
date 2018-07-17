@@ -80,7 +80,7 @@ class EC2Instance:
 
     def __init__(self, client, info):
         self.client = client
-        find_name_in_tags = filter(lambda tag: tag['Key'] == 'Name', info.get('Tags')) # noqa E501
+        find_name_in_tags = filter(lambda tag: tag['Key'] == 'Name', info.get('Tags', [])) # noqa E501
         self.instance_id = info.get('InstanceId')
         self.type = info.get('InstanceType')
         if find_name_in_tags and len(find_name_in_tags) > 0:

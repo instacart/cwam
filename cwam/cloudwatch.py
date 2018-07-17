@@ -70,12 +70,12 @@ class CloudWatch(Client, object):
             to_ignore_humans = []
             all_alarms = objects.get('all') or []
             instance_name = instance.name
-            filtered_instance = list(filter(lambda i: i in instance.name, objects.keys())) # noqa E501
+            filtered_instance = list(filter(lambda i: i in instance.name, objects.keys()))  # noqa E501
             if len(filtered_instance) > 0:
                 instance_name = max(filtered_instance, key=len)
             alarms = objects.get(instance_name) or []
             alarms_names = [a.name for a in alarms]
-            all_alarms = [obj for obj in all_alarms if obj.name not in alarms_names] # noqa E501
+            all_alarms = [obj for obj in all_alarms if obj.name not in alarms_names]  # noqa E501
             alarms = alarms + all_alarms
             if len(alarms) > 0:
                 for alarm in alarms:
@@ -93,7 +93,7 @@ class CloudWatch(Client, object):
                     print('  - Checking alarm: {}'.format(alarm.name))
 
                     found1 = [a for a in human_alarms if a.name == alarm.name]
-                    found2 = [a for a in scripts_alarms if a.name == alarm.name] # noqa E501
+                    found2 = [a for a in scripts_alarms if a.name == alarm.name]  # noqa E501
 
                     if found1 and len(found1) > 0:
                         found1 = found1[0]
@@ -183,8 +183,6 @@ class CloudWatch(Client, object):
                 to_ignore_humans_total.append(to_ignore_humans)
 
                 print  # New line
-            else:
-                print('  - None')
 
         print('\nCreate total: {}'.format(sum([len(a) for a in to_create_total])))  # noqa E501
         print('Update total: (Scripted: {} | Humans: {})'.format(sum([len(a) for a in to_update_scripted_total]),  # noqa E501
