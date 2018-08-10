@@ -1,9 +1,11 @@
 from .cloudwatch import CloudWatch
 
+
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
         yield l[i:i + n]
+
 
 class ECSInstance:
     def __init__(self, client, info):
@@ -50,7 +52,8 @@ class ECS(CloudWatch, object):
             clusters += page['clusterArns']
         described = []
         for chunk in chunks(clusters, 100):
-            for cluster in self.client.describe_clusters(clusters=chunk)['clusters']:
+            resp = self.client.describe_clusters(clusters=chunk)['clusters']
+            for cluster in resp:
                 described.append(ECSInstance(self.client, cluster))
         return described
 
