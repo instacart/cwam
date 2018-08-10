@@ -14,6 +14,7 @@ from .pgbouncer import PGBouncer
 from .elb import ELB
 from .rds import RDS
 from .ec2 import EC2
+from .ecs import ECS
 from .kinesis import Kinesis
 from .elastic_cache import ElastiCache
 from .utils import json_serializer
@@ -45,6 +46,9 @@ ELASTIC_CACHE_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
 EC2_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
                                  '.cwam',
                                  'ec2.template.yml')
+ECS_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
+                                 '.cwam',
+                                 'ecs.template.yml')
 PGBOUNCER_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
                                        '.cwam',
                                        'pgbouncer.template.yml')
@@ -824,6 +828,121 @@ def ec2_remote_alarms(ctx, template, no_human, no_script):
               aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
               debug=ctx.obj['DEBUG'])
     human_alarms, script_alarms = ec2.remote_alarms(namespace=namespace,
+                                                    prefix=prefix)
+
+    if not no_human:
+        click.echo('Human alarms.')
+        if len(human_alarms) > 0:
+            for alarm in human_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+    if not no_script:
+        click.echo('Script alarms.')
+        if len(script_alarms) > 0:
+            for alarm in script_alarms:
+                click.echo(str(alarm))
+        else:
+            click.echo('None.')
+
+
+@main.group()
+@click.pass_context
+def ecs(ctx):
+    pass
+
+
+@ecs.command(name='list')  # noqa: F811
+@click.pass_context
+def ecs_list(ctx):
+    """List ECS clusters."""
+    instances = ECS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                    aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                    aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                    aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                    debug=ctx.obj['DEBUG']).list()
+    for instance in instances:
+        click.echo(instance)
+
+
+@ecs.command(name='create')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ECS_TMP_FILE,
+              help='Path to template file. Default: {}.'.format(ECS_TMP_FILE))
+@click.option('--simulate', '-s', is_flag=True, default=False,
+              help='Simulate only. Do not take actions')
+def ecs_create(ctx, template, simulate):
+    """Create alarms configured in --template file"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['ecs']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+        only = template.get('only')
+        exclude = template.get('exclude')
+        sns = template.get('sns')
+        default = template.get('default')
+        alarms = template.get('alarms')
+    else:
+        ctx.fail('Conf file not found. Make sure --template is a valid path.')
+
+    if len(alarms) > 0:
+        ecs = ECS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+                  aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+                  aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+                  aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+                  debug=ctx.obj['DEBUG'])
+        ecs.create(objects=parse_alarms(namespace, alarms),
+                   namespace=namespace,
+                   prefix=prefix,
+                   default=parse_default_alarm(namespace, default),
+                   only=parse_exclude_only(only),
+                   exclude=parse_exclude_only(exclude),
+                   sns=sns,
+                   simulate=simulate)
+    else:
+        click.echo('No alarms found.')
+
+
+@ecs.command(name='local-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ECS_TMP_FILE,
+              help='Path to template file. Default: {}.'.format(ECS_TMP_FILE))
+def ecs_local_alarms(ctx, template):
+    namespace, alarms = parse_alarms_yml(ctx, 'ecs', template)
+    for k, v in parse_alarms(namespace, alarms).items():
+        click.echo(k)
+        for alarm in v:
+            click.echo(str(alarm))
+
+
+@ecs.command(name='remote-alarms')  # noqa: F811
+@click.pass_context
+@click.option('--template', '-t', type=UNICODE_TYPE,
+              default=ECS_TMP_FILE,
+              help='Path to template file. Default: {}.'.format(ECS_TMP_FILE))
+@click.option('--no-human', '-h', is_flag=True, default=False,
+              help='Show only human alarms.')
+@click.option('--no-script', '-s', is_flag=True, default=False,
+              help='Show only script alarms.')
+def ecs_remote_alarms(ctx, template, no_human, no_script):
+    """List alarms configured on AWS"""
+    if os.path.isfile(template):
+        template = parse_yml(ctx, template)['ecs']
+        namespace = template.get('namespace')
+        prefix = template.get('prefix')
+    else:
+        namespace = None
+        prefix = None
+
+    ecs = ECS(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
+              aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],
+              aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],
+              aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],
+              debug=ctx.obj['DEBUG'])
+    human_alarms, script_alarms = ecs.remote_alarms(namespace=namespace,
                                                     prefix=prefix)
 
     if not no_human:
