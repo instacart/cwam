@@ -22,7 +22,7 @@ test_requirements = [
 
 setup(
     name='cwam',
-    version='1.0.1',
+    version='2.0',
     description="Easy way to create default CloudWatch Alarms.",
     long_description=readme + '\n\n' + history,
     author="Quentin Rousseau",
