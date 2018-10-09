@@ -76,7 +76,7 @@ class ElastiCache(CloudWatch, object):
                                           debug=debug)
         self.client = self.session.client('elasticache')
 
-    def _describe_elastic_caches(self):
+    def _describe_elasticaches(self):
         caches = []
         pager = self.client.get_paginator('describe_cache_clusters')
         for page in pager.paginate():
@@ -85,7 +85,7 @@ class ElastiCache(CloudWatch, object):
         return caches
 
     def list(self):
-        return self._describe_elastic_caches()
+        return self._describe_elasticaches()
 
     def remote_alarms(self, namespace=DEFAULT_NAMESPACE,
                       prefix=ALARM_NAME_PREFIX):
@@ -100,7 +100,7 @@ class ElastiCache(CloudWatch, object):
         if exclude is not None and only is not None:
             raise "Exlude and Only option are mutually exclusive."
 
-        instances = self._describe_elastic_caches()
+        instances = self._describe_elasticaches()
 
         redis_instances = [i for i in instances if i.engine == 'redis']
         memcached_instances = [i for i in instances if i not in redis_instances] # noqa E501

@@ -10,7 +10,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.7',
+    'Click>=7.0',
     'boto3>=1.4.3',
     'dictdiffer>=0.6.1',
     'PyYAML>=3.12'
@@ -22,7 +22,7 @@ test_requirements = [
 
 setup(
     name='cwam',
-    version='1.0.0',
+    version='2.0',
     description="Easy way to create default CloudWatch Alarms.",
     long_description=readme + '\n\n' + history,
     author="Quentin Rousseau",
