@@ -644,7 +644,7 @@ def elasticache_list(ctx):
 def elasticache_create(ctx, template, simulate):
     """Create alarms configured in --template file"""
     if os.path.isfile(template):
-        template = parse_yml(ctx, template)['elasticaches']
+        template = parse_yml(ctx, template)['elasticache']
         namespace = template.get('namespace')
         prefix = template.get('prefix')
         only = template.get('only')
@@ -681,7 +681,7 @@ def elasticache_create(ctx, template, simulate):
               default=ELASTIC_CACHE_TMP_FILE,
               help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
 def elasticache_local_alarms(ctx, template):
-    namespace, alarms = parse_alarms_yml(ctx, 'elasticaches', template)
+    namespace, alarms = parse_alarms_yml(ctx, 'elasticache', template)
     for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
@@ -700,7 +700,7 @@ def elasticache_local_alarms(ctx, template):
 def elasticache_remote_alarms(ctx, template, no_human, no_script):
     """List alarms configured on AWS"""
     if os.path.isfile(template):
-        template = parse_yml(ctx, template)['elasticaches']
+        template = parse_yml(ctx, template)['elasticache']
         namespace = template.get('namespace')
         prefix = template.get('prefix')
     else:
