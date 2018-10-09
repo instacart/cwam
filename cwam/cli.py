@@ -16,7 +16,7 @@ from .rds import RDS
 from .ec2 import EC2
 from .ecs import ECS
 from .kinesis import Kinesis
-from .elastic_cache import ElastiCache
+from .elasticache import ElastiCache
 from .utils import json_serializer
 
 # Fix Python 2.x vs 3.x.
@@ -42,7 +42,7 @@ KINESIS_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
                                      'kinesis.template.yml')
 ELASTIC_CACHE_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
                                            '.cwam',
-                                           'elastic_cache.template.yml')
+                                           'elasticache.template.yml')
 EC2_TMP_FILE = "{}/{}/{}".format(expanduser("~"),
                                  '.cwam',
                                  'ec2.template.yml')
@@ -617,13 +617,13 @@ def pgbouncer_remote_alarms(ctx, template, no_human, no_script):
 
 @main.group()
 @click.pass_context
-def elastic_cache(ctx):
+def elasticache(ctx):
     pass
 
 
-@elastic_cache.command(name='list')  # noqa: F811
+@elasticache.command(name='list')  # noqa: F811
 @click.pass_context
-def elastic_cache_list(ctx):
+def elasticache_list(ctx):
     """List ElastiCache clusters."""
     instances = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],
                             aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
@@ -634,17 +634,17 @@ def elastic_cache_list(ctx):
         click.echo(instance)
 
 
-@elastic_cache.command(name='create')  # noqa: F811
+@elasticache.command(name='create')  # noqa: F811
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
               help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
 @click.option('--simulate', '-s', is_flag=True, default=False,
               help='Simulate only. Do not take actions')
-def elastic_cache_create(ctx, template, simulate):
+def elasticache_create(ctx, template, simulate):
     """Create alarms configured in --template file"""
     if os.path.isfile(template):
-        template = parse_yml(ctx, template)['elastic_caches']
+        template = parse_yml(ctx, template)['elasticaches']
         namespace = template.get('namespace')
         prefix = template.get('prefix')
         only = template.get('only')
@@ -657,12 +657,12 @@ def elastic_cache_create(ctx, template, simulate):
         ctx.fail('Conf file not found. Make sure --template is a valid path.')
 
     if len(alarms) > 0:
-        elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
+        elasticache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
                                     aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                                     aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],  # noqa E501
                                     aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],  # noqa E501
                                     debug=ctx.obj['DEBUG'])
-        elastic_cache.create(objects=parse_alarms(namespace, alarms),
+        elasticache.create(objects=parse_alarms(namespace, alarms),
                              namespace=namespace,
                              prefix=prefix,
                              default=parse_default_alarm(namespace, default),
@@ -675,20 +675,20 @@ def elastic_cache_create(ctx, template, simulate):
         click.echo('No alarms found.')
 
 
-@elastic_cache.command(name='local-alarms')  # noqa: F811
+@elasticache.command(name='local-alarms')  # noqa: F811
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
               help='Path to template file. Default: {}.'.format(ELASTIC_CACHE_TMP_FILE))  # noqa E501
-def elastic_cache_local_alarms(ctx, template):
-    namespace, alarms = parse_alarms_yml(ctx, 'elastic_caches', template)
+def elasticache_local_alarms(ctx, template):
+    namespace, alarms = parse_alarms_yml(ctx, 'elasticaches', template)
     for k, v in parse_alarms(namespace, alarms).items():
         click.echo(k)
         for alarm in v:
             click.echo(str(alarm))
 
 
-@elastic_cache.command(name='remote-alarms')  # noqa: F811
+@elasticache.command(name='remote-alarms')  # noqa: F811
 @click.pass_context
 @click.option('--template', '-t', type=UNICODE_TYPE,
               default=ELASTIC_CACHE_TMP_FILE,
@@ -697,22 +697,22 @@ def elastic_cache_local_alarms(ctx, template):
               help='Show only human alarms.')
 @click.option('--no-script', '-s', is_flag=True, default=False,
               help='Show only script alarms.')
-def elastic_cache_remote_alarms(ctx, template, no_human, no_script):
+def elasticache_remote_alarms(ctx, template, no_human, no_script):
     """List alarms configured on AWS"""
     if os.path.isfile(template):
-        template = parse_yml(ctx, template)['elastic_caches']
+        template = parse_yml(ctx, template)['elasticaches']
         namespace = template.get('namespace')
         prefix = template.get('prefix')
     else:
         namespace = None
         prefix = None
 
-    elastic_cache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
+    elasticache = ElastiCache(aws_access_key_id=ctx.obj['AWS_ACCESS_KEY_ID'],  # noqa E501
                                 aws_access_secret_key=ctx.obj['AWS_SECRET_ACCESS_KEY'],  # noqa E501
                                 aws_session_token=ctx.obj['AWS_SESSION_TOKEN'],  # noqa E501
                                 aws_default_region=ctx.obj['AWS_DEFAULT_REGION'],  # noqa E501
                                 debug=ctx.obj['DEBUG'])
-    human_alarms, script_alarms = elastic_cache.remote_alarms(namespace=namespace,  # noqa E501
+    human_alarms, script_alarms = elasticache.remote_alarms(namespace=namespace,  # noqa E501
                                                               prefix=prefix)
 
     if not no_human:

@@ -10,7 +10,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.7',
+    'Click>=7.0',
     'boto3>=1.4.3',
     'dictdiffer>=0.6.1',
     'PyYAML>=3.12'

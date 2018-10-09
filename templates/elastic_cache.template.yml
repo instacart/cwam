@@ -19,7 +19,7 @@
 # Redis
 # Cf. http://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CacheMetrics.Redis.html
 
-elastic_caches:
+elasticaches:
   namespace: AWS/ElastiCache
   prefix: Cache
   # only:
@@ -64,7 +64,7 @@ elastic_caches:
           EvaluationPeriods: 1
           Period: 60
           Threshold: 1000000000
-    my_elastic_cache_identifier:
+    my_elasticache_identifier:
       - HighCPUUtilization:
           MetricName: CPUUtilization
           Statistic: Average
