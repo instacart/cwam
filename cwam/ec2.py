@@ -28,6 +28,7 @@ class EC2Instance:
         "m4.4xlarge": 8,
         "m4.10xlarge": 20,
         "m4.16xlarge": 32,
+        "m5.24xlarge": 48,
         "c1.medium": 2,
         "c1.xlarge": 8,
         "cc2.8xlarge": 16,
