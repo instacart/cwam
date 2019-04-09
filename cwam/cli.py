@@ -64,7 +64,7 @@ def json_dumps(dict, pretty=False):
 def parse_yml(ctx, path):
     with open(path, 'r') as stream:
         try:
-            content = yaml.load(stream)
+            content = yaml.safe_load(stream)
         except yaml.YAMLError as e:
             ctx.fail(e)
         return content
