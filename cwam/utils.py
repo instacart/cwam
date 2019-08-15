@@ -99,12 +99,7 @@ def resolved_dict(name, instance, original, default, namespace=None,
     if prefix is not None:
         params['AlarmName'] = '{}/{}/{}'.format(prefix, instance.name, name)
 
-    if params.get('Dimensions') and len(params.get('Dimensions')) > 0:
-        for dim in params['Dimensions']:
-            value = dim.get('Value')
-            if value:
-                dim['Value'] = instance.dict().get(value)
-    else:
+    if not params.get('Dimensions') or len(params.get('Dimensions')) == 0:
         params['Dimensions'] = instance.default_dimensions()
 
     for attr in params:
